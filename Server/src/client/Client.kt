@@ -24,9 +24,10 @@ object Client {
                     println("server: $line")
                 }
             }
+
             if(read.availableForRead != 0){
                 val temp = ByteArray(read.availableForRead)
-                val t = read.readAvailable(temp)
+                read.readAvailable(temp)
                 val text = String(temp)
                 println("server: ${text}")
             }
