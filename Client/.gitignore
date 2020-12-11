@@ -1,0 +1,12 @@
+/.gradle
+/.idea
+/out
+/build
+/dist
+*.egg-info
+*.iml
+*.ipr
+*.iws
+/.vs
+/.vscode
+*pycache*
