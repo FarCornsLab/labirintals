@@ -10,3 +10,4 @@
 /.vs
 /.vscode
 *pycache*
+*.spec

@@ -15,7 +15,7 @@ def resource_path(relative):
 
 class Core:
     def __init__(self):
-        with open("config.json", "r") as read_file:
+        with open(os.path.join('configs',"config.json"), "r") as read_file:
             self.config = json.load(read_file)
         pygame.mixer.init(44100, -16, 2, 4096)
         pygame.init()

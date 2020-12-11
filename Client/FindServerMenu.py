@@ -56,4 +56,5 @@ class FindServerMenu(Scene):
     def btn_back_pressed(self, event):
         Core.core.load_scene("MainMenu")
     def btn_connect_pressed(self, event):
-        print("Connect to "+ self.server_list.get_single_selection() )
+        if self.server_list.get_single_selection() != None:
+            print("Connect to "+ self.server_list.get_single_selection() )
