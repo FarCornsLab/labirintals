@@ -4,6 +4,8 @@ from collections import defaultdict
 import Scene
 import os
 import json
+from MainMenu import MainMenu
+from FindServerMenu import FindServerMenu
 
 def resource_path(relative):
     relative = os.path.join('resource',relative)
@@ -21,12 +23,21 @@ class Core:
         self.surface = pygame.display.set_mode(self.config['resolution'])
         pygame.display.set_caption('labirintlas')
         self.cur_scene:Scene = None
+        self.next_scene:Scene = None
         print("Core inited")
-    def deactivate_cur_scene(self):
-        if(self.cur_scene !=None):
+        self.scenes_pull = {"MainMenu":MainMenu,"FindServerMenu":FindServerMenu}
+    def load_scene(self,scene_str:str):
+        if self.cur_scene == None:
+            self.cur_scene = self.scenes_pull[scene_str]()
+        else:
+            self.next_scene = self.scenes_pull[scene_str]()
             self.cur_scene.exit()
-    def activate_scene(self,scene:Scene):
-        scene.run()
+
+    def run_game(self):
+        while True:
+            self.cur_scene.run()
+            self.cur_scene = self.next_scene
+
 
 
 core = Core()

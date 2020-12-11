@@ -16,7 +16,7 @@ class Scene:
         self.keydown_handlers = defaultdict(list)
         self.keyup_handlers = defaultdict(list)
         self.mouse_handlers = []
-        self.manager = pygame_gui.UIManager(pygame.display.get_surface().get_size())
+        self.ui_manager = pygame_gui.UIManager(pygame.display.get_surface().get_size())
         self.surface = pygame.display.get_surface()
 
     def update(self):
@@ -45,7 +45,7 @@ class Scene:
                 for cb in self.btn_pressed_call_backs:
                     if(cb[0] == event.ui_element):
                         cb[1](event)
-            self.manager.process_events(event)
+            self.ui_manager.process_events(event)
         
     def exit(self):
         self.exit_flag = True
@@ -58,7 +58,7 @@ class Scene:
             self.update()
             self.draw()
             
-            self.manager.update(self.time_delta)
-            self.manager.draw_ui(self.surface)
+            self.ui_manager.update(self.time_delta)
+            self.ui_manager.draw_ui(self.surface)
             pygame.display.update()
             
