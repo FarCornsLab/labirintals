@@ -10,13 +10,13 @@ import kotlinx.coroutines.runBlocking
 import com.google.gson.annotations.*
 
 data class Test(
-    @SerializedName("name")
-    val name: String? = null,
+        @SerializedName("name")
+        val name: String? = null,
 
-    @SerializedName("age")
-    val age: Int? = null,
+        @SerializedName("age")
+        val age: Int? = null,
 
-    val dotcom: String? = "www.tele.com"
+        val dotcom: String? = "www.tele.com"
 ) {
 //    override fun toString(): String {
 //        return "JSON: ${super.toString()}"
@@ -28,8 +28,15 @@ object Server {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        val port: Int
+        if (args.isNotEmpty()) {
+            port = args[0].toInt()
+        } else {
+            port = DefaultPort
+        }
+
         runBlocking {
-            val serverSocket = aSocket(selectorManager).tcp().bind(port = DefaultPort)
+            val serverSocket = aSocket(selectorManager).tcp().bind(port = port)
             println("Echo Server listening at ${serverSocket.localAddress}")
             while (true) {
                 val socket = serverSocket.accept()
@@ -41,8 +48,8 @@ object Server {
                     try {
                         writer.writeStringUtf8("Successful connection!")
                         writer.writeStringUtf8(
-                            "You can use commands /json { @JSONObject } or " +
-                                    "write plain text"
+                                "You can use commands /json { @JSONObject } or " +
+                                        "write plain text"
                         )
                         while (true) {
                             val line = reader.readUTF8Line()
