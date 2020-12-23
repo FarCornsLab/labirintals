@@ -44,7 +44,8 @@ object Server {
                 launch {
                     val reader = socket.openReadChannel()
                     val writer = socket.openWriteChannel(autoFlush = true)
-                    val serverManager = ServerManager(reader, writer)
+                    val storage = LocalStorage()
+                    val serverManager = ServerManager(reader, writer, storage)
                     try {
                         writer.writeStringUtf8("Successful connection!")
                         writer.writeStringUtf8(

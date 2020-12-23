@@ -1,0 +1,21 @@
+package com.labirintals.model.responses
+
+import com.google.gson.annotations.SerializedName
+import com.labirintals.model.base.ErrorModel
+import com.labirintals.model.base.PlayerModel
+import com.labirintals.server.Server
+
+data class GameParamsAnswer(
+    @SerializedName("start_time")
+    val startTime: String? = "0",
+    @SerializedName("step_time")
+    val stepTime: String? = null,
+    @SerializedName("players")
+    val platers: List<PlayerModel>? = null,
+    @SerializedName("error")
+    val error: ErrorModel? = null
+){
+    override fun toString(): String {
+        return Server.gson.toJson(this)
+    }
+}
