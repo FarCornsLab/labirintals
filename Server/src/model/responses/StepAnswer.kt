@@ -1,7 +1,7 @@
 package com.labirintals.model.responses
 
 import com.google.gson.annotations.SerializedName
-import com.labirintals.model.StepType
+import com.labirintals.model.requests.StepType
 import com.labirintals.model.base.ErrorModel
 import com.labirintals.server.Server
 

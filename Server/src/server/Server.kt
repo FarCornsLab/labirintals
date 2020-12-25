@@ -8,23 +8,12 @@ import io.ktor.utils.io.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import com.google.gson.annotations.*
-
-data class Test(
-        @SerializedName("name")
-        val name: String? = null,
-
-        @SerializedName("age")
-        val age: Int? = null,
-
-        val dotcom: String? = "www.tele.com"
-) {
-//    override fun toString(): String {
-//        return "JSON: ${super.toString()}"
-//    }
-}
+import com.labirintals.server.managers.LocalStorage
+import com.labirintals.server.managers.ServerManager
 
 object Server {
     val gson = Gson()
+    val storage = LocalStorage()
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -44,8 +33,8 @@ object Server {
                 launch {
                     val reader = socket.openReadChannel()
                     val writer = socket.openWriteChannel(autoFlush = true)
-                    val storage = LocalStorage()
-                    val serverManager = ServerManager(reader, writer, storage)
+
+                    val serverManager = ServerManager(reader, writer)
                     try {
                         writer.writeStringUtf8("Successful connection!")
                         writer.writeStringUtf8(
@@ -56,6 +45,7 @@ object Server {
                             val line = reader.readUTF8Line()
                             line?.let {
                                 serverManager.receiveMessage(line)
+                                storage.saveAll()
                             }
                         }
                     } catch (e: Throwable) {

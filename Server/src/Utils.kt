@@ -6,4 +6,10 @@ import kotlinx.coroutines.Dispatchers
 object Utils{
     val selectorManager = ActorSelectorManager(Dispatchers.IO)
     val DefaultPort = 9002
+
+}
+
+object ErrorCode{
+    val ErrBadRequest = 400
+    val ErrConflict = 409
 }

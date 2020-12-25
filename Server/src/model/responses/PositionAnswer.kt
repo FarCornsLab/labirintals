@@ -7,6 +7,17 @@ import com.labirintals.server.Server
 data class PositionAnswer(
     @SerializedName("step_id")
     val stepId: Int? = null,
+    @SerializedName("position")
+    val position: PositionModel? = null,
+    @SerializedName("error")
+    val error: ErrorModel? = null
+) {
+    override fun toString(): String {
+        return Server.gson.toJson(this)
+    }
+}
+
+data class PositionModel(
     @SerializedName("up_border")
     val upBorder: Boolean? = null,
     @SerializedName("right_border")
@@ -15,10 +26,4 @@ data class PositionAnswer(
     val down_border: Boolean? = null,
     @SerializedName("left_border")
     val left_border: Boolean? = null,
-    @SerializedName("error")
-    val error: ErrorModel? = null
-){
-    override fun toString(): String {
-        return Server.gson.toJson(this)
-    }
-}
+)

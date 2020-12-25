@@ -9,9 +9,9 @@ data class GameParamsAnswer(
     @SerializedName("start_time")
     val startTime: String? = "0",
     @SerializedName("step_time")
-    val stepTime: String? = null,
+    val stepTime: Long? = null,
     @SerializedName("players")
-    val platers: List<PlayerModel>? = null,
+    val players: List<PlayerModel>? = null,
     @SerializedName("error")
     val error: ErrorModel? = null
 ){

@@ -1,4 +1,4 @@
-package com.labirintals.model
+package com.labirintals.model.requests
 
 import com.google.gson.annotations.SerializedName
 
