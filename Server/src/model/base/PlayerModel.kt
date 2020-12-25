@@ -12,7 +12,7 @@ data class PlayerModel(
     val cid: String? = null,
     @SerializedName("oid")
     val oid: String? = null,
-    @SerializedName("stepId")
+    @SerializedName("step_id")
     val stepId: Int? = 0,
     @SerializedName("step_type")
     val stepType: StepType? = null,
