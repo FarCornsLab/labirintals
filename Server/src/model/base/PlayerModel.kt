@@ -8,7 +8,11 @@ import com.labirintals.server.Server
 data class PlayerModel(
     @SerializedName("name")
     val name: String? = null,
-    @SerializedName("id")
+    @SerializedName("cid")
+    val cid: String? = null,
+    @SerializedName("oid")
+    val oid: String? = null,
+    @SerializedName("stepId")
     val stepId: Int? = 0,
     @SerializedName("step_type")
     val stepType: StepType? = null,
@@ -19,8 +23,3 @@ data class PlayerModel(
         return Server.gson.toJson(this)
     }
 }
-
-data class AllPlayersModel(
-    @SerializedName("")
-    val players: List<PlayerModel>? = null
-)

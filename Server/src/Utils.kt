@@ -12,4 +12,6 @@ object Utils{
 object ErrorCode{
     val ErrBadRequest = 400
     val ErrConflict = 409
+    val ErrGame= 405
+    val NotAuthorized = 403
 }

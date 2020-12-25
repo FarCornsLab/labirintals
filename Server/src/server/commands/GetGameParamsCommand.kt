@@ -5,11 +5,13 @@ import com.labirintals.model.base.ErrorModel
 import com.labirintals.model.responses.ConnectionAnswer
 import com.labirintals.model.responses.GameParamsAnswer
 import com.labirintals.server.Server.storage
+import com.labirintals.server.managers.SocketDataHolder
+import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 
 class GetGameParamsCommand : BaseCommand {
 
-    override fun doCommand(): String? {
+    override fun doCommand(socketData: SocketDataHolder): String? {
         val error: ErrorModel?
         if(storage.players.isEmpty()){
             error = ErrorModel(code = ErrorCode.ErrBadRequest, message = "Массив игроков пуст")

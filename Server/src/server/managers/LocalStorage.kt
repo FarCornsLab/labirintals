@@ -1,7 +1,6 @@
 package com.labirintals.server.managers
 
 import com.labirintals.model.ServerSettings
-import com.labirintals.model.base.AllPlayersModel
 import com.labirintals.model.base.PlayerModel
 import com.labirintals.server.Server
 import java.io.File
@@ -16,7 +15,12 @@ class LocalStorage {
     private val serverParamsSaving = "server.json"
 
     val players: ArrayList<PlayerModel> by lazy {
-        ArrayList(readPlayers())
+        val mPlayers = readPlayers()
+        if (mPlayers == null) {
+            ArrayList()
+        } else {
+            ArrayList(mPlayers)
+        }
     }
 
     val serverParams: ServerSettings by lazy {
@@ -38,13 +42,13 @@ class LocalStorage {
         }
     }
 
-    private fun readPlayers(): List<PlayerModel> {
+    private fun readPlayers(): List<PlayerModel>? {
         val file = File(playersSaving)
         if (!file.isFile) {
             file.createNewFile()
         }
 
-        return Server.gson.fromJson(file.readText(), Array<PlayerModel>::class.java).toList()
+        return Server.gson.fromJson(file.readText(), Array<PlayerModel>::class.java)?.toList()
     }
 
     private fun saveSettingParams() {

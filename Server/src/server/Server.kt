@@ -3,17 +3,19 @@ package com.labirintals.server
 import com.google.gson.Gson
 import com.labirintals.Utils.DefaultPort
 import com.labirintals.Utils.selectorManager
+import com.labirintals.server.managers.BaseSocket
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import com.google.gson.annotations.*
 import com.labirintals.server.managers.LocalStorage
 import com.labirintals.server.managers.ServerManager
+import com.labirintals.server.managers.SocketManager
 
 object Server {
     val gson = Gson()
     val storage = LocalStorage()
+    val serverManager = ServerManager()
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -31,24 +33,24 @@ object Server {
                 val socket = serverSocket.accept()
                 println("Accepted $socket")
                 launch {
-                    val reader = socket.openReadChannel()
-                    val writer = socket.openWriteChannel(autoFlush = true)
-
-                    val serverManager = ServerManager(reader, writer)
+                    val baseSocket = BaseSocket(socket)
+                    serverManager.sockets.add(baseSocket)
+                    val socketManager = SocketManager(baseSocket)
                     try {
-                        writer.writeStringUtf8("Successful connection!")
-                        writer.writeStringUtf8(
+                        baseSocket.writer.writeStringUtf8("Successful connection!")
+                        baseSocket.writer.writeStringUtf8(
                                 "You can use commands /json { @JSONObject } or " +
                                         "write plain text"
                         )
                         while (true) {
-                            val line = reader.readUTF8Line()
+                            val line =  baseSocket.reader.readUTF8Line()
                             line?.let {
-                                serverManager.receiveMessage(line)
+                                socketManager.receiveMessage(line)
                                 storage.saveAll()
                             }
                         }
                     } catch (e: Throwable) {
+                        serverManager.sockets.remove(baseSocket)
                         socket.close()
                     }
                 }
