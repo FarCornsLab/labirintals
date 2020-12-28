@@ -48,6 +48,7 @@
 
 Ответ: `connection_answer`.  
 Пример запроса:
+
     {
         "cmd": "connection",
         "params": {
@@ -64,6 +65,7 @@
 * `error` (`error`) - поле ошибки (необязательное, в случе её отсутствия).
 
 Пример ответа:
+
     {
         "cmd": "connection_answer",
         "params": {
@@ -77,6 +79,7 @@
 От: `client`.  
 Ответ: `game_params`.  
 Пример запроса:
+
     {
         "cmd": "get_game_params",
         "params": { }
@@ -92,6 +95,7 @@
 * `error` (`error`) - поле ошибки (необязательное, в случе её отсутствия).
 
 Пример ответа:
+
     {
         "cmd": "game_params",
         "params": {
