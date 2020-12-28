@@ -6,7 +6,7 @@
     {
         "cmd": "get_server_list",
         "params": {
-
+            ...
         }
     }
     
@@ -15,7 +15,7 @@
         "cmd": "get_server_list",
         "сid": 12345,
         "params": {
-
+            ...
         }
     }
 
@@ -82,7 +82,7 @@
 
     {
         "cmd": "get_game_params",
-        "params": { }
+        "cid": 1729
     }
 
 #### `game_params`:
