@@ -6,15 +6,15 @@ class CommandFactory private constructor() {
 
     companion object {
         private val simpleCommands = mapOf(
-            "get_game_params" to GetGameParamsCommand(),
-            "get_position" to GetPositionCommand(),
-            "step" to GetStepInfoCommand()
+            GetGameParamsCommand.TAG to GetGameParamsCommand(),
+            GetPositionCommand.TAG to GetPositionCommand(),
+            GetStepInfoCommand.TAG to GetStepInfoCommand()
         )
 
         private val commandsWithParams: (Any?) -> Map<String, BaseCommand> = { params ->
             mapOf(
-                "connection" to ConnectionCommand(params),
-                "make_step" to MakeStepCommand(params),
+                ConnectionCommand.TAG to ConnectionCommand(params),
+                MakeStepCommand.TAG to MakeStepCommand(params),
             )
         }
 

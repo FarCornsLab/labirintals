@@ -1,6 +1,7 @@
 package com.labirintals.server.commands
 
 import com.labirintals.ErrorCode
+import com.labirintals.model.BaseModel
 import com.labirintals.model.base.ErrorModel
 import com.labirintals.model.responses.ConnectionAnswer
 import com.labirintals.model.responses.GameParamsAnswer
@@ -10,20 +11,23 @@ import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 
 class GetGameParamsCommand : BaseCommand {
+    companion object {
+        val TAG = "get_game_params"
+    }
 
     override fun doCommand(socketData: SocketDataHolder): String? {
         val error: ErrorModel?
-        if(storage.players.isEmpty()){
+        if (storage.players.isEmpty()) {
             error = ErrorModel(code = ErrorCode.ErrBadRequest, message = "Массив игроков пуст")
-        }else{
+        } else {
             error = null
         }
         val response = GameParamsAnswer(
             startTime = storage.serverParams.timeToString(),
             stepTime = storage.serverParams.stepTime,
-            players = storage.players,
+            players = storage.players.map { it.toClientModel() },
             error = error
         )
-        return response.toString()
+        return BaseModel(commandName = TAG, commandParams = response).toString()
     }
 }

@@ -6,18 +6,21 @@ import com.labirintals.model.responses.PositionModel
 import com.labirintals.server.Server
 
 data class PlayerModel(
+    val name: String? = null,
+    val cid: String? = null,
+    val oid: String? = null,
+    val stepId: Int? = 0,
+    val stepType: StepType? = null,
+    val position: PositionModel? = null
+) {
+    fun toClientModel() = ClientModel(name, oid)
+}
+
+data class ClientModel(
     @SerializedName("name")
     val name: String? = null,
-    @SerializedName("cid")
-    val cid: String? = null,
     @SerializedName("oid")
-    val oid: String? = null,
-    @SerializedName("step_id")
-    val stepId: Int? = 0,
-    @SerializedName("step_type")
-    val stepType: StepType? = null,
-    @SerializedName("position")
-    val position: PositionModel? = null
+    val oid: String? = null
 ) {
     override fun toString(): String {
         return Server.gson.toJson(this)
