@@ -10,7 +10,7 @@ import com.labirintals.server.managers.SocketDataHolder
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 
-class GetGameParamsCommand : BaseCommand {
+class GetGameParamsCommand : BaseCommand() {
     companion object {
         val TAG = "get_game_params"
     }

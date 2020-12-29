@@ -11,7 +11,7 @@ import com.labirintals.server.Server
 import com.labirintals.server.managers.SocketDataHolder
 import io.ktor.network.sockets.*
 
-class MakeStepCommand(args: Any?) : BaseCommand {
+class MakeStepCommand(args: Any?) : BaseCommand() {
 
     companion object {
         val TAG = "make_step"
@@ -20,16 +20,15 @@ class MakeStepCommand(args: Any?) : BaseCommand {
     private val params: MakeStepModel = Server.gson.fromJson(args.toString(), MakeStepModel::class.java)
 
     override fun doCommand(socketData: SocketDataHolder): String? {
-        var response: StepAnswer
         if (params.stepid == 0) {
-            response = wrongStartGameResponse
+            return BaseModel(commandName = TAG, commandParams = wrongStartGameResponse).toString()
         }
         if (params.stepid == -1) {
-            response = wrongEndGameResponse
+            return BaseModel(commandName = TAG, commandParams = wrongEndGameResponse).toString()
         }
 
         val player = socketData.player
-        response = if (player == null) {
+        val response = if (player == null) {
             wrongPlayerResponse
         } else {
             val index = Server.storage.players.indexOf(player)
@@ -49,15 +48,4 @@ class MakeStepCommand(args: Any?) : BaseCommand {
         stepId = -1,
         error = ErrorModel(ErrorCode.ErrGame, message = "Игра уже закончилась")
     )
-
-    private val wrongPlayerResponse = StepAnswer(
-        error = ErrorModel(ErrorCode.NotAuthorized, message = "Игрок не найден")
-    )
-
-    private val successResponse: (Int?, StepType?) -> StepAnswer = { stepId, stepType ->
-        StepAnswer(
-            stepId = stepId,
-            stepType = stepType
-        )
-    }
 }

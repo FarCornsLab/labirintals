@@ -3,10 +3,9 @@ package com.labirintals.server.managers
 import com.labirintals.model.ServerSettings
 import com.labirintals.model.base.PlayerModel
 import com.labirintals.server.Server
+import com.labirintals.server.labirint.Labirint
 import io.ktor.util.date.*
 import java.io.File
-import java.io.FileOutputStream
-import java.io.FileWriter
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
@@ -14,6 +13,9 @@ import kotlin.collections.ArrayList
 class LocalStorage {
     private val playersSaving = "players.json"
     private val serverParamsSaving = "server.json"
+
+    //val labirint = Labirint.generate(10, 8)
+    val labirint = Labirint.read("labirint")
 
     val players: ArrayList<PlayerModel> by lazy {
         ArrayList()
@@ -59,7 +61,7 @@ class LocalStorage {
 
     fun saveAll() {
         saveSettingParams()
-        savePlayers()
+        //savePlayers()
     }
 
     private fun savePlayers() {

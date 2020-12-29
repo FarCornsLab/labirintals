@@ -11,6 +11,7 @@ data class PlayerModel(
     val oid: String? = null,
     val stepId: Int? = 0,
     val stepType: StepType? = null,
+    val coords: Pair<Int, Int>? = null,
     val position: PositionModel? = null
 ) {
     fun toClientModel() = ClientModel(name, oid)

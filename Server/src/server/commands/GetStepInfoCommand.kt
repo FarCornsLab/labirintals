@@ -8,7 +8,7 @@ import com.labirintals.model.responses.StepAnswer
 import com.labirintals.server.managers.SocketDataHolder
 import io.ktor.utils.io.*
 
-class GetStepInfoCommand : BaseCommand {
+class GetStepInfoCommand : BaseCommand() {
     companion object {
         val TAG = "step"
     }
@@ -21,16 +21,5 @@ class GetStepInfoCommand : BaseCommand {
             successResponse(player.stepId, player.stepType)
         }
         return BaseModel(commandName = TAG, commandParams = response).toString()
-    }
-
-    private val wrongPlayerResponse = StepAnswer(
-        error = ErrorModel(ErrorCode.NotAuthorized, message = "Игрок не найден")
-    )
-
-    private val successResponse: (Int?, StepType?) -> StepAnswer = { stepId, stepType ->
-        StepAnswer(
-            stepId = stepId,
-            stepType = stepType
-        )
     }
 }

@@ -11,7 +11,7 @@ import com.labirintals.server.Server.storage
 import com.labirintals.server.managers.SocketDataHolder
 import java.util.*
 
-class ConnectionCommand(args: Any?) : BaseCommand {
+class ConnectionCommand(args: Any?) : BaseCommand() {
     companion object {
         val TAG = "connection"
     }
@@ -29,7 +29,8 @@ class ConnectionCommand(args: Any?) : BaseCommand {
                 socketData.player = PlayerModel(
                     name = name,
                     cid = UUID.randomUUID().toString(),
-                    oid = UUID.randomUUID().toString()
+                    oid = UUID.randomUUID().toString(),
+                    coords = storage.labirint.getFreePlace()
                 )
                 storage.players.add(socketData.player!!)
                 ConnectionAnswer(true, player = socketData.player!!.toClientModel())
@@ -37,6 +38,7 @@ class ConnectionCommand(args: Any?) : BaseCommand {
         } else {
             ConnectionAnswer(false, error = ErrorModel(ErrorCode.ErrBadRequest, "Введите имя пользователя"))
         }
+        storage.labirint.printLabirint()
         return BaseModel(commandName = TAG, commandParams = response).toString()
     }
 }
