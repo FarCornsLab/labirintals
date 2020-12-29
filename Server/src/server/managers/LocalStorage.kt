@@ -3,6 +3,7 @@ package com.labirintals.server.managers
 import com.labirintals.model.ServerSettings
 import com.labirintals.model.base.PlayerModel
 import com.labirintals.server.Server
+import io.ktor.util.date.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter
@@ -15,12 +16,13 @@ class LocalStorage {
     private val serverParamsSaving = "server.json"
 
     val players: ArrayList<PlayerModel> by lazy {
-        val mPlayers = readPlayers()
-        if (mPlayers == null) {
-            ArrayList()
-        } else {
-            ArrayList(mPlayers)
-        }
+        ArrayList()
+//        val mPlayers = readPlayers()
+//        if (mPlayers == null) {
+//            ArrayList()
+//        } else {
+//            ArrayList(mPlayers)
+//        }
     }
 
     val serverParams: ServerSettings by lazy {
@@ -36,7 +38,7 @@ class LocalStorage {
         val file = File(serverParamsSaving)
         if (!file.isFile) {
             file.createNewFile()
-            return ServerSettings(timeStart = LocalDateTime.now(), stepTime = 30)
+            return ServerSettings(timeStart =  getTimeMillis(), stepTime = 30)
         } else {
             return Server.gson.fromJson(file.readText(), ServerSettings::class.java)
         }
@@ -48,7 +50,7 @@ class LocalStorage {
             file.createNewFile()
         }
 
-        return Server.gson.fromJson(file.readText(), Array<PlayerModel>::class.java)?.toList()
+        return ArrayList() //Server.gson.fromJson(file.readText(), Array<PlayerModel>::class.java)?.toList()
     }
 
     private fun saveSettingParams() {

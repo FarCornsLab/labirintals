@@ -16,11 +16,12 @@ class SocketManager(
     val socketData: SocketDataHolder = SocketDataHolder()
 
     suspend fun receiveMessage(command: String) {
-        when {
-            command.startsWith("/json") -> readJson(command.removePrefix("/json").trim())
-
-            else -> socket.writer.writeStringUtf8("$command\n")
-        }
+        readJson(command)
+//        when {
+//            command.startsWith("/json") -> readJson(command.removePrefix("/json").trim())
+//
+//            else -> socket.writer.writeStringUtf8("$command\n")
+//        }
     }
 
     private suspend fun readJson(cmd: String) {
