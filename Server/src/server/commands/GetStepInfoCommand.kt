@@ -13,13 +13,12 @@ class GetStepInfoCommand : BaseCommand() {
         val TAG = "step"
     }
 
-    override fun doCommand(socketData: SocketDataHolder): String? {
+    override suspend fun doCommand(socketData: SocketDataHolder): String? {
         val player = socketData.player
-        val response = if (player == null) {
-            wrongPlayerResponse
-        } else {
-            successResponse(player.stepId, player.stepType)
-        }
-        return BaseModel(commandName = TAG, commandParams = response).toString()
+        return BaseModel(
+            commandName = TAG,
+            commandParams = if (player != null) successResponse(player.stepId, player.stepType) else null,
+            error = if (player == null) wrongPlayerResponse else null
+        ).toString()
     }
 }

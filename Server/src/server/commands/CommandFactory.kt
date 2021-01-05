@@ -1,7 +1,5 @@
 package com.labirintals.server.commands
 
-import com.labirintals.model.base.Command
-
 class CommandFactory private constructor() {
 
     companion object {

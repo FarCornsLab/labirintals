@@ -10,9 +10,7 @@ class ConnectionAnswer(
     @SerializedName("is_successfully")
     val isSuccessfully: Boolean? = null,
     @SerializedName("player")
-    val player: ClientModel? = null,
-    @SerializedName("error")
-    val error: ErrorModel? = null
+    val player: ClientModel? = null
 ) {
     override fun toString(): String {
         return Server.gson.toJson(this)

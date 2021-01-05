@@ -19,33 +19,46 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
 
     private val params: MakeStepModel = Server.gson.fromJson(args.toString(), MakeStepModel::class.java)
 
-    override fun doCommand(socketData: SocketDataHolder): String? {
-        if (params.stepid == 0) {
-            return BaseModel(commandName = TAG, commandParams = wrongStartGameResponse).toString()
+    override suspend fun doCommand(socketData: SocketDataHolder): String? {
+        if (params.stepId == 0) {
+            return BaseModel(commandName = TAG, error = wrongStartGameResponse).toString()
         }
-        if (params.stepid == -1) {
-            return BaseModel(commandName = TAG, commandParams = wrongEndGameResponse).toString()
+        if (params.stepId == -1) {
+            return BaseModel(commandName = TAG, error = wrongEndGameResponse).toString()
         }
 
         val player = socketData.player
         val response = if (player == null) {
-            wrongPlayerResponse
+            null
         } else {
             val index = Server.storage.players.indexOf(player)
-            Server.storage.players[index] = player.copy(stepId = params.stepid, stepType = params.stepType)
-            successResponse(params.stepid, params.stepType)
+//            if(params.stepId!! == Server.storage.globalStep) {
+//
+//            }else{
+//
+//            }
+            if(Server.storage.globalStep == -1){
+                successResponse(-1, null)
+            }else {
+                player.updateStep(
+                    params.stepId!!,
+                    params.stepType!!
+                )//player.copy(stepId = params.stepId, stepType = params.stepType)
+                socketData.player = player
+                Server.storage.players[index] = player
+                successResponse(params.stepId, params.stepType)
+            }
         }
 
-        return BaseModel(commandName = TAG, commandParams = response).toString()
+        return BaseModel(
+            commandName = TAG,
+            commandParams = response,
+            error = if (player == null) wrongPlayerResponse else null
+        ).toString()
     }
 
-    private val wrongStartGameResponse = StepAnswer(
-        stepId = 0,
-        error = ErrorModel(ErrorCode.ErrGame, message = "Игра еще не началась")
-    )
+    private val wrongStartGameResponse = ErrorModel(ErrorCode.ErrGame, message = "Игра еще не началась")
 
-    private val wrongEndGameResponse = StepAnswer(
-        stepId = -1,
-        error = ErrorModel(ErrorCode.ErrGame, message = "Игра уже закончилась")
-    )
+    private val wrongEndGameResponse = ErrorModel(ErrorCode.ErrGame, message = "Игра уже закончилась")
+
 }

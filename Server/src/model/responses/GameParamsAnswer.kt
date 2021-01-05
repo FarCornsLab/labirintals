@@ -12,9 +12,7 @@ data class GameParamsAnswer(
     @SerializedName("step_time")
     val stepTime: Long? = null,
     @SerializedName("players")
-    val players: List<ClientModel>? = null,
-    @SerializedName("error")
-    val error: ErrorModel? = null
+    val players: List<ClientModel>? = null
 ){
     override fun toString(): String {
         return Server.gson.toJson(this)

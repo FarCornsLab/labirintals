@@ -13,7 +13,7 @@ class SocketManager(
     private val socket: BaseSocket
 ) {
 
-    val socketData: SocketDataHolder = SocketDataHolder()
+    val socketData: SocketDataHolder = SocketDataHolder(socket = socket)
 
     suspend fun receiveMessage(command: String) {
         readJson(command)

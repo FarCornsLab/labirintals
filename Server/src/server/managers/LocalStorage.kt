@@ -15,17 +15,11 @@ class LocalStorage {
     private val serverParamsSaving = "server.json"
 
     //val labirint = Labirint.generate(10, 8)
-    val labirint = Labirint.read("labirint")
+    val labirint = Labirint.read("labirint.json")
 
-    val players: ArrayList<PlayerModel> by lazy {
-        ArrayList()
-//        val mPlayers = readPlayers()
-//        if (mPlayers == null) {
-//            ArrayList()
-//        } else {
-//            ArrayList(mPlayers)
-//        }
-    }
+    val players = ArrayList<PlayerModel>()
+    var globalStep = 0
+    val newPlayers = ArrayList<PlayerModel>()
 
     val serverParams: ServerSettings by lazy {
         readServerParams()

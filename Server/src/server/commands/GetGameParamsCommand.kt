@@ -15,7 +15,7 @@ class GetGameParamsCommand : BaseCommand() {
         val TAG = "get_game_params"
     }
 
-    override fun doCommand(socketData: SocketDataHolder): String? {
+    override suspend fun doCommand(socketData: SocketDataHolder): String? {
         val error: ErrorModel?
         if (storage.players.isEmpty()) {
             error = ErrorModel(code = ErrorCode.ErrBadRequest, message = "Массив игроков пуст")
@@ -26,8 +26,7 @@ class GetGameParamsCommand : BaseCommand() {
             startTime = storage.serverParams.timeToString(),
             stepTime = storage.serverParams.stepTime,
             players = storage.players.map { it.toClientModel() },
-            error = error
         )
-        return BaseModel(commandName = TAG, commandParams = response).toString()
+        return BaseModel(commandName = TAG, commandParams = response, error = error).toString()
     }
 }
