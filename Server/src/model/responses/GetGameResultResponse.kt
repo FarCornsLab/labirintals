@@ -1,0 +1,36 @@
+package com.labirintals.model.responses
+
+import com.google.gson.annotations.SerializedName
+import com.labirintals.model.base.ClientModel
+import com.labirintals.model.base.Coords
+import com.labirintals.server.Server
+import com.labirintals.server.labirint.Entity
+
+data class GetGameResultResponse(
+    @SerializedName("winners")
+    val winners: List<ClientModel>? = null,
+    @SerializedName("step_id")
+    val stepId: Int? = null,
+    @SerializedName("map")
+    val map: MapModel? = null
+) {
+    override fun toString(): String {
+        return Server.gson.toJson(this)
+    }
+}
+
+data class MapModel(
+    @SerializedName("horizontal_border")
+    val horizontalBorders: List<Entity>? = null,
+    @SerializedName("vertical_border")
+    val verticalBorders: List<Entity>? = null,
+    @SerializedName("players_position")
+    val mapPlayer: MapPlayer? = null
+)
+
+data class MapPlayer(
+    @SerializedName("player")
+    val mPlayer: ClientModel? = null,
+    @SerializedName("position")
+    val mPosition: Coords? = null
+)
