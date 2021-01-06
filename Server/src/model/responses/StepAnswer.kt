@@ -11,9 +11,7 @@ data class StepAnswer(
     @SerializedName("set_step_type")
     val stepType: StepType? = null,
     @SerializedName("step_end_time")
-    val stepEndTime: String? = null,
-    @SerializedName("error")
-    val error: ErrorModel? = null
+    val stepEndTime: String? = Server.storage.lastStepTime?.toString()
 ) {
     override fun toString(): String {
         return Server.gson.toJson(this)

@@ -1,7 +1,7 @@
 package com.labirintals.server.managers
 
 import com.labirintals.model.BaseModel
-import com.labirintals.model.base.PlayerModel
+
 import com.labirintals.server.Server
 
 import com.labirintals.server.commands.CommandFactory

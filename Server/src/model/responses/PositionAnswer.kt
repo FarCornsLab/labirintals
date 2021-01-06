@@ -16,13 +16,13 @@ data class PositionAnswer(
     }
 }
 
-data class PositionModel(
-    @SerializedName("up_border")
-    val upBorder: Boolean? = null,
-    @SerializedName("right_border")
-    val rightBorder: Boolean? = null,
-    @SerializedName("down_border")
-    val down_border: Boolean? = null,
-    @SerializedName("left_border")
-    val left_border: Boolean? = null,
-)
+//data class PositionModel(
+//    @SerializedName("up_border")
+//    val upBorder: Boolean? = null,
+//    @SerializedName("right_border")
+//    val rightBorder: Boolean? = null,
+//    @SerializedName("down_border")
+//    val down_border: Boolean? = null,
+//    @SerializedName("left_border")
+//    val left_border: Boolean? = null,
+//)

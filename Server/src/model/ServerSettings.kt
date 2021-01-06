@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 
 data class ServerSettings(
     @SerializedName("time_start")
-    val timeStart: Long? = null,
+    var timeStart: Long? = null,
     @SerializedName("step_time")
     val stepTime: Long? = null  //секунды
 ) {

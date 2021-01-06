@@ -36,6 +36,7 @@ class ConnectionCommand(args: Any?) : BaseCommand() {
                     borders = storage.labirint.getBorders(pos!!)
                 )
                 storage.players.add(socketData.player!!)
+                storage.count = storage.players.size
                 ConnectionAnswer(true, player = socketData.player!!.toClientModel())
             }
         } else {

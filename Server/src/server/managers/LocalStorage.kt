@@ -8,33 +8,82 @@ import io.ktor.util.date.*
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
+import kotlin.properties.Delegates
 
 class LocalStorage {
+    companion object {
+        val WAITING_START_SECONDS = 60L
+        val WAITING_STEP_SECONDS = 30L
+    }
+
     private val playersSaving = "players.json"
     private val serverParamsSaving = "server.json"
 
-    //val labirint = Labirint.generate(10, 8)
-    val labirint = Labirint.read("labirint.json")
-
+    var gameIsStarted = false
+    var lastStepTime: Long? = null
     val players = ArrayList<PlayerModel>()
     var globalStep = 0
     val newPlayers = ArrayList<PlayerModel>()
 
-    val serverParams: ServerSettings by lazy {
-        readServerParams()
+    private fun startTimer() {
+        serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)
+        Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)) {
+            gameIsStarted = true
+            globalStep = 1
+            startGame()
+        }
     }
 
-    private fun getCurrentDate(): String {
-        val currentDateTime = LocalDateTime.now()
-        return currentDateTime.format(DateTimeFormatter.ISO_DATE_TIME)
+    private fun startGame() {
+        if (gameIsStarted) {
+            Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)) {
+                nextStep()
+            }
+        }
+    }
+
+    private fun nextStep() {
+        var gameIsEnd = false
+        players.forEachIndexed { index, oldPlayer ->
+            val player = newPlayers.find { oldPlayer.oid == it.oid && oldPlayer.cid == it.cid }
+            if (player != null) {
+                players[index] = player
+                if (player.stepId == PlayerModel.END_GAME) {
+                    gameIsEnd = true
+                }
+            }
+        }
+        lastStepTime = getTimeMillis()
+        if(gameIsEnd){
+            globalStep = PlayerModel.END_GAME
+            gameIsStarted = false
+        }else {
+            globalStep += 1
+            startGame()
+        }
+    }
+
+    var count: Int by Delegates.observable(0) { _, _, value ->
+        if (value >= 2) {
+            startTimer()
+        }
+    }
+
+    val labirint = Labirint.read("labirint.json")
+
+    val serverParams: ServerSettings by lazy {
+        readServerParams()
     }
 
     private fun readServerParams(): ServerSettings {
         val file = File(serverParamsSaving)
         if (!file.isFile) {
             file.createNewFile()
-            return ServerSettings(timeStart =  getTimeMillis(), stepTime = 30)
+            return ServerSettings(timeStart = 0, stepTime = 30)
         } else {
             return Server.gson.fromJson(file.readText(), ServerSettings::class.java)
         }

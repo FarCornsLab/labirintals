@@ -5,11 +5,9 @@ import com.labirintals.model.BaseModel
 import com.labirintals.model.base.ErrorModel
 import com.labirintals.model.base.PlayerModel
 import com.labirintals.model.requests.MakeStepModel
-import com.labirintals.model.requests.StepType
 import com.labirintals.model.responses.StepAnswer
 import com.labirintals.server.Server
 import com.labirintals.server.managers.SocketDataHolder
-import io.ktor.network.sockets.*
 
 class MakeStepCommand(args: Any?) : BaseCommand() {
 
@@ -20,42 +18,48 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
     private val params: MakeStepModel = Server.gson.fromJson(args.toString(), MakeStepModel::class.java)
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {
-        if (params.stepId == 0) {
+        if (Server.storage.globalStep == 0) {
             return BaseModel(commandName = TAG, error = wrongStartGameResponse).toString()
         }
-        if (params.stepId == -1) {
+        if (Server.storage.globalStep == -1) {
             return BaseModel(commandName = TAG, error = wrongEndGameResponse).toString()
         }
 
-        val player = socketData.player
-        val response = if (player == null) {
-            null
-        } else {
-            val index = Server.storage.players.indexOf(player)
-//            if(params.stepId!! == Server.storage.globalStep) {
-//
-//            }else{
-//
-//            }
-            if(Server.storage.globalStep == -1){
-                successResponse(-1, null)
-            }else {
-                player.updateStep(
-                    params.stepId!!,
-                    params.stepType!!
-                )//player.copy(stepId = params.stepId, stepType = params.stepType)
-                socketData.player = player
-                Server.storage.players[index] = player
-                successResponse(params.stepId, params.stepType)
+        val player = socketData.player ?: return BaseModel(commandName = TAG, error = wrongPlayerResponse).toString()
+        if (params.stepId == Server.storage.globalStep) {
+            val tempPlayer = player.copy()
+            val resCode = tempPlayer.updateStep(params)
+            if (resCode == PlayerModel.END_GAME) {
+                //Server.storage.globalStep = PlayerModel.END_GAME
+                return BaseModel(
+                    commandName = TAG,
+                    commandParams = StepAnswer(PlayerModel.END_GAME, params.stepType)
+                ).toString()
             }
-        }
+            if (resCode == PlayerModel.OBSTACLE) {
+                return BaseModel(
+                    commandName = TAG,
+                    error = ErrorModel(ErrorCode.ErrGame, "Ход в стену запрещен.")
+                ).toString()
+            }
 
-        return BaseModel(
-            commandName = TAG,
-            commandParams = response,
-            error = if (player == null) wrongPlayerResponse else null
-        ).toString()
+            val oldTempPlayer = Server.storage.newPlayers.find { it.oid == tempPlayer.oid && it.cid == tempPlayer.cid }
+            if (oldTempPlayer != null) {
+                val index = Server.storage.newPlayers.indexOf(oldTempPlayer)
+                Server.storage.newPlayers[index] = tempPlayer
+            } else {
+                Server.storage.newPlayers.add(tempPlayer)
+            }
+            return BaseModel(
+                commandName = TAG,
+                commandParams = StepAnswer(tempPlayer.stepId, tempPlayer.stepType)
+            ).toString()
+        } else {
+            return BaseModel(commandName = TAG, error = wrongStepTime).toString()
+        }
     }
+
+    private val wrongStepTime = ErrorModel(ErrorCode.ErrGame, "Время хода вышло")
 
     private val wrongStartGameResponse = ErrorModel(ErrorCode.ErrGame, message = "Игра еще не началась")
 

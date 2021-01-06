@@ -15,7 +15,7 @@ open class BaseCommand {
 
     val wrongPlayerResponse = ErrorModel(ErrorCode.NotAuthorized, message = "Игрок не найден")
 
-    val successResponse: (Int?, StepType?) -> StepAnswer = { stepId, stepType ->
+    val stepResponse: (Int?, StepType?) -> StepAnswer = { stepId, stepType ->
         StepAnswer(
             stepId = stepId,
             stepType = stepType

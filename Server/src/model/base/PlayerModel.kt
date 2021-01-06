@@ -1,8 +1,9 @@
 package com.labirintals.model.base
 
 import com.google.gson.annotations.SerializedName
+import com.labirintals.model.requests.MakeStepModel
 import com.labirintals.model.requests.StepType
-import com.labirintals.model.responses.PositionModel
+import com.labirintals.model.responses.StepAnswer
 import com.labirintals.server.Server
 import com.labirintals.server.labirint.Entity
 import com.labirintals.server.labirint.Labirint
@@ -16,27 +17,30 @@ data class PlayerModel(
     var coords: Coords? = null,
     var borders: List<Entity>? = null
 ) {
+    companion object{
+        val END_GAME = -1
+        val OBSTACLE = 0
+    }
+
     fun toClientModel() = ClientModel(name, oid)
 
-    fun updateStep(newStepId: Int, newStepType: StepType) {
-        //if(newStepId == Server.storage.globalStep) {
-            stepId = newStepId
-            stepType = newStepType
-            changeCoords()
-            val canStep = canMakeStep()
-            if (canStep == stepId) {
-                borders = Server.storage.labirint.getBorders(coords!!)
-            }
-            Server.storage.globalStep = canStep
-        //}
+    fun updateStep(params: MakeStepModel): Int {
+        stepId = params.stepId
+        stepType = params.stepType
+        changeCoords()
+        val canStep = canMakeStep()
+        if (canStep == stepId) {
+            borders = Server.storage.labirint.getBorders(coords!!)
+        }
+        return canStep
     }
 
     private fun canMakeStep(): Int {
         if (borders!![stepType?.index!!] == Entity.exit) {
-            return -1
+            return END_GAME
         }
         if (borders!![stepType?.index!!] == Entity.obstacle) {
-            return 0
+            return OBSTACLE
         }
         return stepId!!
     }
