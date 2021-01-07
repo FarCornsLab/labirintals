@@ -14,7 +14,7 @@ public:
     /** Connected to the game */
     bool connect() final {
         beforeConnect(executor_->getConnectionParams());
-        bool result = executor_->doStep();
+        bool result = executor_->connect();
         afterConnect(result);
         return result;
     }
