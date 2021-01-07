@@ -7,20 +7,24 @@ import com.labirintals.server.managers.SocketDataHolder
 
 class GetPositionCommand : BaseCommand() {
     companion object {
-        val TAG = "get_position"
+        const val TAG = "get_position"
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {
-        val player = socketData.player
-        if (player == null) {
-            return BaseModel(commandName = MakeStepCommand.TAG, error = wrongPlayerResponse).toString()
+        val player =
+            Server.storage.players.find { it.oid == socketData.player?.oid && it.cid == socketData.player?.cid }
+        player?.let {
+            socketData.player = it
+        }
+        return if (player == null) {
+            BaseModel(commandName = MakeStepCommand.TAG, error = wrongPlayerResponse).toString()
         } else {
-            if(Server.storage.globalStep == -1){
+            if (Server.storage.globalStep == -1) {
                 player.stepId = -1
             }
-            return BaseModel(
+            BaseModel(
                 commandName = TAG,
-                commandParams =  PositionAnswer(player.stepId, player.borders)
+                commandParams = PositionAnswer(player.stepId, player.borders)
             ).toString()
         }
     }
