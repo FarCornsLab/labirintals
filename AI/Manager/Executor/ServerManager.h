@@ -1,6 +1,10 @@
 #ifndef AI_SERVERMANAGER_H
 #define AI_SERVERMANAGER_H
 
+#include <optional>
+#include <string>
+#include <vector>
+
 #include "ManagerExecutor.h"
 #include "Client.h"
 
@@ -25,6 +29,9 @@ private:
     std::shared_ptr<Client> client_;
     ServerConfig connection_config_;
     std::string bot_name_;
+    int oid_;
+    int cid_;
+    std::optional<std::vector<std::string>> winners_;
 };
 
 

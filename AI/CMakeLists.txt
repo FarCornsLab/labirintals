@@ -33,6 +33,7 @@ set(HEADERS
         Algorithms/ExecutorAlgorithm.h
         Algorithms/LucaTremoAlgorithm.h
         Client/Client.h
+        Client/Commands.h
         Fields/Field.h
         Fields/FieldDescription.h
         Fields/ServerField.h
@@ -58,7 +59,7 @@ set(DEFINITIONS
         Navigation/Map.cpp
         Navigation/Position.cpp
         Bot.cpp
-        )
+        Client/Commands.cpp)
 
 include_directories(
         Algorithms

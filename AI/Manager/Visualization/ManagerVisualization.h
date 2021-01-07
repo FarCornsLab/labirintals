@@ -45,7 +45,7 @@ protected:
     Position getCurrentPosition() const { return executor_->getCurrentPosition(); }
 
     /** Return borders in the position */
-    BordersInPoint getBorders(const Position& position) const { executor_->getBorders(position); };
+    BordersInPoint getBorders(const Position& position) const { return executor_->getBorders(position); };
 private:
     std::shared_ptr<ManagerExecutor> executor_;
 };

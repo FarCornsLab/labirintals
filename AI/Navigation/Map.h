@@ -36,6 +36,9 @@ public:
     /** Made step */
     void makeStep(const StepDirection direction, const BordersInPoint& borders);
 
+    /** Set borders in current position */
+    void setBorders(const BordersInPoint& borders);
+
     /** Return last step taken */
     std::optional<StepDirection> lastStep() const;
 

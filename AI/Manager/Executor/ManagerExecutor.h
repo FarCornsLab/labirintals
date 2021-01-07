@@ -5,6 +5,7 @@
 
 #include "ExecutorAlgorithm.h"
 #include "Field.h"
+#include "Manager.h"
 #include "Map.h"
 
 /** Manager for execution bot steps */

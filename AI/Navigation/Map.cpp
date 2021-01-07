@@ -47,6 +47,10 @@ void Map::makeStep(const StepDirection direction, const BordersInPoint& borders)
     }
 }
 
+void Map::setBorders(const BordersInPoint& borders) {
+    border_map_.set(player_position_, borders);
+}
+
 std::optional<StepDirection> Map::lastStep() const {
     return  track_.empty() ? std::nullopt : std::optional<StepDirection>(track_.top());
 }
