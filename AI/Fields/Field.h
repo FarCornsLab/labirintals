@@ -8,34 +8,29 @@
 #include "FieldDescription.h"
 #include "Map.h"
 
-/** Result a step */
-struct StepResult {
-    /** If game over got a winner name */
-    std::optional<std::vector<std::string>> names_winner;
-    /** Borders around a player */
-    BordersInPoint borders;
-};
-
 /** Game board interaction class */
 class Field {
 public:
     /** Made step */
-    StepResult doStep(const StepDirection direction) {
-        std::array<StepResult (Field::*)(), static_cast<unsigned int>(StepDirection::max) + 1> do_steps_func = {
+    std::optional<BordersInPoint> doStep(const StepDirection direction) {
+        std::array<std::optional<BordersInPoint> (Field::*)(), static_cast<unsigned int>(StepDirection::max) + 1> do_steps_func = {
                 &Field::stepUp,
                 &Field::stepRight,
                 &Field::stepDown,
                 &Field::stepLeft
         };
 
-        return (*this.*(do_steps_func[direction]))();
+        return (*this.*(do_steps_func[static_cast<unsigned int>(direction)]))();
     }
 
+    /** Connect to the field. If it successful return borders */
+    virtual std::optional<BordersInPoint> connect() = 0;
+
 protected:
-    virtual StepResult stepUp() = 0;
-    virtual StepResult stepRight() = 0;
-    virtual StepResult stepDown() = 0;
-    virtual StepResult stepLeft() = 0;
+    virtual std::optional<BordersInPoint> stepUp() = 0;
+    virtual std::optional<BordersInPoint> stepRight() = 0;
+    virtual std::optional<BordersInPoint> stepDown() = 0;
+    virtual std::optional<BordersInPoint> stepLeft() = 0;
 };
 
 

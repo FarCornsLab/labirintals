@@ -46,10 +46,10 @@ bool ServerManager::doStep() {
     }
 
     auto step_result = field_->doStep(step.value());
-    if (step_result.isGameOver) {
+    if (!step_result.has_value()) {
         return false;
     }
-    map_->makeStep(step.value(), step_result.borders);
+    map_->makeStep(step.value(), *step_result);
     return true;
 }
 

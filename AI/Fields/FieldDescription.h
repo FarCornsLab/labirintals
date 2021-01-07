@@ -28,7 +28,10 @@ public:
     BorderType operator[](BorderPosition position) const { return data_[static_cast<unsigned int>(position)]; }
 
 private:
-    std::array<BorderType, static_cast<unsigned int>(BorderPosition::max)> data_;
+    std::array<BorderType, static_cast<unsigned int>(BorderPosition::max) + 1> data_ = {BorderType::unknown,
+                                                                                        BorderType::unknown,
+                                                                                        BorderType::unknown,
+                                                                                        BorderType::unknown};
 };
 
 #endif //AI_FIELDDESCRIPTION_H
