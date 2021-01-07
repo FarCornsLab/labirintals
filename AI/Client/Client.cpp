@@ -14,6 +14,7 @@ bool Client::connect(unsigned int attempt_number) {
         return false;
     }
     out_ << "Server connection established." << std::endl;
+    return true;
 }
 
 std::optional<std::string> Client::request(const std::string& request) {
