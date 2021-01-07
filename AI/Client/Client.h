@@ -9,6 +9,8 @@
 
 #include <asio.hpp>
 
+#include "Commands.h"
+
 /** Client for server connection */
 class Client {
 public:
@@ -20,8 +22,26 @@ public:
               query_({host.data(), std::to_string(port)}),
               out_(out) {}
 
-    /** Function for connection to server */
-    void connect(unsigned int attempt_number = 3);
+    /** Function for connection to server. Return true if successful */
+    bool connect(unsigned int attempt_number = 3);
+
+    /** Send request to the server and get answer */
+    template<class T>
+    std::optional<T> request(s_cmd::ServerCommand* cmd) {
+        auto answer = request(cmd->toString());
+        if (!answer.has_value()) {
+            return std::nullopt;
+        }
+
+        return s_cmd::ServerAnswer::get<T>(answer.value());
+    }
+
+protected:
+    asio::io_context context_;
+    asio::ip::tcp::socket tcp_socket_;
+    asio::ip::tcp::resolver resolver_;
+    asio::ip::tcp::resolver::query query_;
+    std::ostream& out_;
 
     /** Send request to the server and get answer */
     std::optional<std::string> request(const std::string& request);
@@ -31,13 +51,6 @@ public:
 
     /** Get answer from the server */
     std::optional<std::string> getAnswer();
-
-protected:
-    asio::io_context context_;
-    asio::ip::tcp::socket tcp_socket_;
-    asio::ip::tcp::resolver resolver_;
-    asio::ip::tcp::resolver::query query_;
-    std::ostream& out_;
 };
 
 

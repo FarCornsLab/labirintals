@@ -2,16 +2,16 @@
 
 #include <array>
 
-void Client::connect(unsigned int attempt_number) {
+bool Client::connect(unsigned int attempt_number) {
     out_ << "Trying to connect to the server..." << std::endl;
     try {
         asio::connect(tcp_socket_, resolver_.resolve(query_));
     } catch (...) {
         out_ << "Attempt failed." << std::endl;
         if (attempt_number > 0) {
-            connect(attempt_number - 1);
+            return connect(attempt_number - 1);
         }
-        return;
+        return false;
     }
     out_ << "Server connection established." << std::endl;
 }
