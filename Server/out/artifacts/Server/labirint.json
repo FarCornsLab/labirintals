@@ -1,0 +1,41 @@
+{
+  "horizontal_border": [
+    [
+      "obstacle",
+      "free"
+    ],
+    [
+      "free",
+      "obstacle"
+    ],
+    [
+      "free",
+      "free"
+    ],
+    [
+      "obstacle",
+      "obstacle"
+    ]
+  ],
+  "vertical_border": [
+    [
+      "obstacle",
+      "obstacle",
+      "obstacle"
+    ],
+    [
+      "obstacle",
+      "obstacle",
+      "free"
+    ],
+    [
+      "free",
+      "obstacle",
+      "exit"
+    ]
+  ],
+  "spawn": {
+    "x": 0,
+    "y": 1
+  }
+}

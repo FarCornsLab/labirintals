@@ -12,15 +12,14 @@ import io.ktor.utils.io.*
 
 class GetGameParamsCommand : BaseCommand() {
     companion object {
-        val TAG = "get_game_params"
+        const val TAG = "get_game_params"
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {
-        val error: ErrorModel?
-        if (storage.players.isEmpty()) {
-            error = ErrorModel(code = ErrorCode.ErrBadRequest, message = "Массив игроков пуст")
+        val error = if (storage.players.isEmpty()) {
+            ErrorModel(code = ErrorCode.ErrBadRequest, message = "Массив игроков пуст")
         } else {
-            error = null
+            null
         }
         val response = GameParamsAnswer(
             startTime = storage.serverParams.timeToString(),

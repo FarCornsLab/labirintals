@@ -30,7 +30,8 @@ class SocketManager(
             val command = CommandFactory.create(data.commandName)(data.commandParams)
             val response = command?.doCommand(socketData)
             if (response != null) {
-                println(response)
+                println("From Client: $cmd")
+                println("From Server: $response")
                 socket.writer.writeStringUtf8("${response}\n")
             } else {
                 socket.writer.writeStringUtf8("You can try to write JSON format! { name: \"name\"}\n")

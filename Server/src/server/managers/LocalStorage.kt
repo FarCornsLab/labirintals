@@ -1,6 +1,7 @@
 package com.labirintals.server.managers
 
 import com.labirintals.model.ServerSettings
+import com.labirintals.model.base.ClientModel
 import com.labirintals.model.base.PlayerModel
 import com.labirintals.server.Server
 import com.labirintals.server.labirint.Labirint
@@ -28,6 +29,7 @@ class LocalStorage {
     val players = ArrayList<PlayerModel>()
     var globalStep = 0
     val newPlayers = ArrayList<PlayerModel>()
+    val winners = ArrayList<ClientModel>()
 
     private fun startTimer() {
         serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)
@@ -53,6 +55,7 @@ class LocalStorage {
             if (player != null) {
                 players[index] = player
                 if (player.stepId == PlayerModel.END_GAME) {
+                    winners.add(player.toClientModel())
                     gameIsEnd = true
                 }
             }

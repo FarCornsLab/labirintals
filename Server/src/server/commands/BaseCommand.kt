@@ -11,7 +11,7 @@ import io.ktor.utils.io.*
 import java.io.BufferedWriter
 
 open class BaseCommand {
-    open suspend fun doCommand(socketData: SocketDataHolder): String? { return null}
+    open suspend fun doCommand(socketData: SocketDataHolder): String? { return null }
 
     val wrongPlayerResponse = ErrorModel(ErrorCode.NotAuthorized, message = "Игрок не найден")
 

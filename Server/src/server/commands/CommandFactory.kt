@@ -6,7 +6,8 @@ class CommandFactory private constructor() {
         private val simpleCommands = mapOf(
             GetGameParamsCommand.TAG to GetGameParamsCommand(),
             GetPositionCommand.TAG to GetPositionCommand(),
-            GetStepInfoCommand.TAG to GetStepInfoCommand()
+            GetStepInfoCommand.TAG to GetStepInfoCommand(),
+            GetGameResultCommand.TAG to GetGameResultCommand()
         )
 
         private val commandsWithParams: (Any?) -> Map<String, BaseCommand> = { params ->

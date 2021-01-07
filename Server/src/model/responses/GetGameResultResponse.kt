@@ -21,9 +21,9 @@ data class GetGameResultResponse(
 
 data class MapModel(
     @SerializedName("horizontal_border")
-    val horizontalBorders: List<Entity>? = null,
+    val horizontalBorders: List<List<Entity>>? = null,
     @SerializedName("vertical_border")
-    val verticalBorders: List<Entity>? = null,
+    val verticalBorders: List<List<Entity>>? = null,
     @SerializedName("players_position")
     val mapPlayer: MapPlayer? = null
 )
