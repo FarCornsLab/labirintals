@@ -16,6 +16,7 @@ class FindServerMenu(Scene):
     def _create_menu(self):
         w,h = pygame.display.get_surface().get_size()
         panel_size = (600,400)
+        
         self.panel = pygame_gui.elements.UIPanel(pygame.Rect((w/2 - panel_size[0]/2,h/2 -panel_size[1]/2),panel_size),
                                         starting_layer_height=4,
                                         manager=self.ui_manager)
@@ -49,6 +50,7 @@ class FindServerMenu(Scene):
             server = Core.core.config["server_list"][num]
             try:
                 Core.core.net_manager.connect(server["ip"],server["port"])
+                Core.core.load_scene("WaitStartGameMenu")
             except ConnectionError as err:
                 print("Error"+ err.strerror)
                 self.err_msg = pygame_gui.windows.UIMessageWindow(
