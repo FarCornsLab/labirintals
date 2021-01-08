@@ -14,7 +14,8 @@ import java.util.*
 
 class ConnectionCommand(args: Any?) : BaseCommand() {
     companion object {
-        val TAG = "connection"
+        const val TAG = "connection_answer"
+        const val TAG_NAME = "connection"
     }
 
     private val params: ConnectionModel = Server.gson.fromJson(args.toString(), ConnectionModel::class.java)
