@@ -37,13 +37,8 @@ object Server {
                     serverManager.sockets.add(baseSocket)
                     val socketManager = SocketManager(baseSocket)
                     try {
-                        baseSocket.writer.writeStringUtf8("Successful connection!")
-                        baseSocket.writer.writeStringUtf8(
-                                "You can use commands /json { @JSONObject } or " +
-                                        "write plain text"
-                        )
                         while (true) {
-                            val line =  baseSocket.reader.readUTF8Line()
+                            val line = baseSocket.reader.readUTF8Line()
                             line?.let {
                                 socketManager.receiveMessage(line)
                                 storage.saveAll()

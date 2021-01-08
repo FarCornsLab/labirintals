@@ -20,22 +20,34 @@ object Client {
 
             launch(Dispatchers.IO) {
                 while (true) {
-                    val line = read.readUTF8Line()
-                    println("server: $line")
+                    readLine(read)
+//                        val line = read.readUTF8Line()
+//                        if (line != null) {
+//                            println("server: $line")
+//                        }
                 }
             }
 
-            if(read.availableForRead != 0){
-                val temp = ByteArray(read.availableForRead)
-                read.readAvailable(temp)
-                val text = String(temp)
-                println("server: ${text}")
-            }
+//            if(read.availableForRead != 0){
+//                val temp = ByteArray(read.availableForRead)
+//                read.readAvailable(temp)
+//                val text = String(temp)
+//                println("server: ${text}")
+//            }
 
             for (line in System.`in`.lines()) {
                 println("client: $line")
                 write.writeStringUtf8("$line\n")
             }
+        }
+    }
+
+    private suspend fun readLine(read: ByteReadChannel) {
+        if (read.availableForRead != 0) {
+            val temp = ByteArray(read.availableForRead)
+            read.readAvailable(temp)
+            val text = String(temp)
+            println("server: ${text}")
         }
     }
 
