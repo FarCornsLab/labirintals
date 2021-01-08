@@ -85,15 +85,13 @@
 Ответ на присоединение к игре.  
 От: `server`.  
 Параметры:  
-* `is_successfully` (Boolean) - получилось ли присоедениться;
-* `player`(Player) - инфа о об игроке, если получилось присоедениться 
+* `player`(Player) - инфа о об игроке, если получилось присоедениться. 
 
 Пример ответа:
 
     {
         "cmd": "connection_answer",
         "params": {
-            "s_successfully": true,
             "player": {
                 "name": "Bender Bending Rodríguez",
                 "oid": "dsdsdk-0ds0dsv-sdsd0v-eew21d"
