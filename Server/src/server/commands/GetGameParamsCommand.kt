@@ -12,7 +12,8 @@ import io.ktor.utils.io.*
 
 class GetGameParamsCommand : BaseCommand() {
     companion object {
-        const val TAG = "get_game_params"
+        const val TAG = "game_params"
+        const val TAG_NAME = "get_game_params"
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {

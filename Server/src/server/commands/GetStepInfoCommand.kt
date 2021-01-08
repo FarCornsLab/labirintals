@@ -7,11 +7,14 @@ import com.labirintals.server.managers.SocketDataHolder
 
 class GetStepInfoCommand : BaseCommand() {
     companion object {
-        const val TAG = "step"
+        const val TAG = "step_answer"
+        const val TAG_NAME = "step"
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {
-        val player = Server.storage.newPlayers.find { it.oid == socketData.player?.oid && it.cid == socketData.player?.cid } ?: socketData.player
+        val player =
+            Server.storage.newPlayers.find { it.oid == socketData.player?.oid && it.cid == socketData.player?.cid }
+                ?: socketData.player
 
         return BaseModel(
             commandName = TAG,

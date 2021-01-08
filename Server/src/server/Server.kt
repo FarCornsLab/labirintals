@@ -40,6 +40,7 @@ object Server {
                         while (true) {
                             val line = baseSocket.reader.readUTF8Line()
                             line?.let {
+                                println(it)
                                 socketManager.receiveMessage(line)
                                 storage.saveAll()
                             }
