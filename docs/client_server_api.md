@@ -1,4 +1,34 @@
 # Клиент-сервер API
+## Подключение к серверу и отправка JSON строки
+Сервер использует socket для отпрваки и принятия JSON.
+
+JSON отправляется строкой, символ "\n" является признаком окончания JSON строки
+
+### Пример подключения к серверу, отправки и принятия json команды (Python)
+    import socket
+    import json
+
+    ip = "127.0.0.1"
+    port = 9999
+    sock = socket.socket()
+    sock.connect((ip,port))
+
+    json_cmd = {"cmd":"connect","params"{"name":"player_name"}}
+
+    json_str = json.dumps(json_cmd)
+    json_str += "\n"
+    bytes = json_str.encode()
+    self.sock.sendall(bytes)
+
+    json_str = ""
+    buf = sock.recv(self.buf_size)
+    json_str += buf.decode()
+    while buf[len(buf)-1] != ord("\n"):
+        buf = sock.recv(self.buf_size)
+        if(len(buf) > 0):
+            json_str += buf.decode()
+    json_answ = json.loads(json_str)
+    print(jason_answ)
 
 ## Базовый синтаксис команды
 ### Команды от клиента
@@ -62,7 +92,7 @@
 * `code` (int) - код ошибки;
 * `message` (string) - сообщение об ошибке.
 
-## Команды начало игры
+## Команды начала игры
 
 
 #### `connection`:
@@ -99,6 +129,36 @@
         }
     }
 
+#### `disconnect`:
+Отключение от сервера.  
+От: `client`.  
+Параметры:  
+* нет
+
+Ответ: `connection_answer`.  
+Пример запроса:
+
+    {
+        "cmd": "connection",
+        "params": {
+            "name": "Bender Bending Rodríguez"
+        }
+    }
+
+#### `disconnect_answer`:
+Ответ на отключение от сервера.
+От: `server`.  
+Параметры:  
+* `success` - True если успешно 
+
+Пример ответа:
+    {
+        "cmd": "disconnect_answer",
+        "params": {
+            "success": true
+        }
+    }
+
 #### `get_game_params`:
 Получение параметров игры.  
 От: `client`.  
@@ -111,9 +171,9 @@
 
 #### `game_params`:
 Описывает параметры игры.  
-От: `server`.  
+От: `server`.
 Параметры:  
-* `start_time` (uint64) - время начала в UNIX, в случае если равно 0 - оно ещё не известно;
+* `start_time` (uint64) - время начала игры в миллисекундах UNIX time, в случае если равно 0 - оно ещё не известно;
 * `step_time` (int) - время отведённое на 1 ход в секундах;
 * `players` ([`player`]) - массив игроков, присоеденённых к игре.
 
