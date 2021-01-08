@@ -1,6 +1,8 @@
 import pygame
 import sys
 from collections import defaultdict
+
+from pygame_gui import ui_manager
 from Scene import Scene
 import Core
 import os
@@ -34,6 +36,7 @@ class FindServerMenu(Scene):
                         item_list=sel_item_list,
                         manager=self.ui_manager,
                         container=self.panel)
+        
 
     def btn_back_pressed(self, event):
         Core.core.load_scene("MainMenu")
@@ -46,5 +49,10 @@ class FindServerMenu(Scene):
             server = Core.core.config["server_list"][num]
             try:
                 Core.core.net_manager.connect(server["ip"],server["port"])
-            except ConnectionRefusedError as err:
+            except ConnectionError as err:
                 print("Error"+ err.strerror)
+                self.err_msg = pygame_gui.windows.UIMessageWindow(
+                    rect=pygame.Rect(100, 100, 350, 200),
+                    html_message="Connection Error <br>"+ err.strerror,
+                    manager=self.ui_manager,
+                    window_title="Error")
