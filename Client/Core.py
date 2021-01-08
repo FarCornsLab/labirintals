@@ -7,6 +7,8 @@ import json
 from MainMenu import MainMenu
 from FindServerMenu import FindServerMenu
 
+from NetworkManager import NetworkManager
+
 def resource_path(relative):
     relative = os.path.join('resource',relative)
     if hasattr(sys, "_MEIPASS"):
@@ -26,6 +28,7 @@ class Core:
         self.next_scene:Scene = None
         print("Core inited")
         self.scenes_pull = {"MainMenu":MainMenu,"FindServerMenu":FindServerMenu}
+        self.net_manager = NetworkManager(self.config["player_name"])
     def load_scene(self,scene_str:str):
         if self.cur_scene == None:
             self.cur_scene = self.scenes_pull[scene_str]()

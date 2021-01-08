@@ -29,32 +29,22 @@ class FindServerMenu(Scene):
                                             container=self.panel,
                                             manager=self.ui_manager)
         self.btn_pressed_call_backs.append((self.btn_connect,self.btn_connect_pressed))
+        sel_item_list  = [str(i+1)+". "+Core.core.config["server_list"][i]["name"] for i in range(len(Core.core.config["server_list"]))]
         self.server_list = pygame_gui.elements.UISelectionList(pygame.Rect(50, 50, 500, 300),
-                        item_list=['Server 1',
-                                   'Server 2',
-                                   'Server 3',
-                                   'Server 4',
-                                   'Server 5',
-                                   'Server 6',
-                                   'Server 7',
-                                   'Server 8',
-                                   'Server 9',
-                                   'Server 10',
-                                   'Server 11',
-                                   'Server 12',
-                                   'Server 13',
-                                   'Server 14',
-                                   'Server 15',
-                                   'Server 16',
-                                   'Server 17',
-                                   'Server 18',
-                                   'Server 19',
-                                   'Server 20'
-                                   ],
+                        item_list=sel_item_list,
                         manager=self.ui_manager,
                         container=self.panel)
+
     def btn_back_pressed(self, event):
         Core.core.load_scene("MainMenu")
+
     def btn_connect_pressed(self, event):
-        if self.server_list.get_single_selection() != None:
-            print("Connect to "+ self.server_list.get_single_selection() )
+        sel = self.server_list.get_single_selection()
+        if sel != None:
+            print("Connect to "+ sel )
+            num = int(sel.split(sep=".")[0]) - 1
+            server = Core.core.config["server_list"][num]
+            try:
+                Core.core.net_manager.connect(server["ip"],server["port"])
+            except ConnectionRefusedError as err:
+                print("Error"+ err.strerror)
