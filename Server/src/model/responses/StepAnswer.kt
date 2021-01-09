@@ -6,7 +6,7 @@ import com.labirintals.model.base.ErrorModel
 import com.labirintals.server.Server
 
 data class StepAnswer(
-    @SerializedName("stepId")
+    @SerializedName("step_id")
     val stepId: Int? = null,
     @SerializedName("set_step_type")
     val stepType: StepType? = null,
