@@ -12,7 +12,8 @@ import com.labirintals.server.managers.SocketDataHolder
 class MakeStepCommand(args: Any?) : BaseCommand() {
 
     companion object {
-        val TAG = "make_step"
+        const val TAG = "step_answer"
+        const val TAG_NAME = "make_step"
     }
 
     private val params: MakeStepModel = Server.gson.fromJson(args.toString(), MakeStepModel::class.java)

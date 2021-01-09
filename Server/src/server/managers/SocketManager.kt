@@ -27,12 +27,14 @@ class SocketManager(
     private suspend fun readJson(cmd: String) {
         try {
             val data = Server.gson.fromJson(cmd, BaseModel::class.java)
+            println("data $data")
             val command = CommandFactory.create(data.commandName)(data.commandParams)
+            println("command $command")
             val response = command?.doCommand(socketData)
             if (response != null) {
                 println("From Client: $cmd")
-                println("From Server: $response")
                 socket.writer.writeStringUtf8("${response}\n")
+                println("From Server: $response")
             } else {
                 socket.writer.writeStringUtf8("You can try to write JSON format! { name: \"name\"}\n")
             }

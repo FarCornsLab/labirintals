@@ -32,6 +32,27 @@ class MainMenu(Scene):
         self.btn_pressed_call_backs.append((self.btn_exit,self.btn_exit_pressed))
         self.btn_pressed_call_backs.append((self.btn_find_server,self.btn_find_server_pressed))
 
+        panel_2_size = (250,45)
+        self.panel_2 = pygame_gui.elements.UIPanel(pygame.Rect((w/2 - panel_2_size[0]/2,h/2 -panel_2_size[1]/2 + panel_size[1]/2 + 50),panel_2_size),
+                                        starting_layer_height=4,
+                                        manager=self.ui_manager)
+        self.txt_palyer_name = pygame_gui.elements.UITextEntryLine( 
+                                            relative_rect=pygame.Rect((5,5),(150,25)),
+                                            container=self.panel_2,
+                                            manager=self.ui_manager)
+        self.txt_palyer_name.set_text(Core.core.config["player_name"])
+        self.btn_set_player_name = pygame_gui.elements.UIButton(
+                                            relative_rect=pygame.Rect((160,5),(80,25)),
+                                            text='Set name',
+                                            container=self.panel_2,
+                                            manager=self.ui_manager)
+        self.btn_pressed_call_backs.append((self.btn_set_player_name,self.btn_set_player_name_pressed))
+
+    def btn_set_player_name_pressed(self, event):
+        Core.core.config["player_name"] = self.txt_palyer_name.get_text()
+        Core.core.update_config()
+        self.txt_palyer_name.set_text(Core.core.config["player_name"])
+
     def btn_find_server_pressed(self, event):
         Core.core.load_scene("FindServerMenu")
 

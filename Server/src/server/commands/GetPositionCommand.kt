@@ -7,7 +7,8 @@ import com.labirintals.server.managers.SocketDataHolder
 
 class GetPositionCommand : BaseCommand() {
     companion object {
-        const val TAG = "get_position"
+        const val TAG = "position"
+        const val TAG_NAME = "get_position"
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {

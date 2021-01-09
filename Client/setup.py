@@ -42,7 +42,7 @@ setup(
     long_description=open(join(dirname(__file__), 'README.md')).read(),
     install_requires=[
             'pyinstaller==4.1',
-            'pygame==2.0.0',
+            'pygame==2.0.1',
             'pygame-gui==0.5.7'
         ]
 )

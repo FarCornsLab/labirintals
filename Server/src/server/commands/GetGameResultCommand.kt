@@ -11,7 +11,8 @@ import com.labirintals.server.managers.SocketDataHolder
 
 class GetGameResultCommand : BaseCommand() {
     companion object {
-        const val TAG = "get_game_result"
+        const val TAG = "game_result"
+        const val TAG_NAME = "get_game_result"
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {

@@ -4,8 +4,11 @@ from collections import defaultdict
 import Scene
 import os
 import json
+
 from MainMenu import MainMenu
 from FindServerMenu import FindServerMenu
+from NetworkManager import NetworkManager
+from WaitStartGameMenu import WaitStartGameMenu
 
 def resource_path(relative):
     relative = os.path.join('resource',relative)
@@ -25,14 +28,19 @@ class Core:
         self.cur_scene:Scene = None
         self.next_scene:Scene = None
         print("Core inited")
-        self.scenes_pull = {"MainMenu":MainMenu,"FindServerMenu":FindServerMenu}
+        self.scenes_pull = {"MainMenu":MainMenu,"FindServerMenu":FindServerMenu,"WaitStartGameMenu":WaitStartGameMenu}
+        self.net_manager = NetworkManager(self.config["player_name"])
     def load_scene(self,scene_str:str):
         if self.cur_scene == None:
             self.cur_scene = self.scenes_pull[scene_str]()
         else:
             self.next_scene = self.scenes_pull[scene_str]()
             self.cur_scene.exit()
-
+    def update_config(self):
+        with open(os.path.join('configs',"config.json"), "w") as read_file:
+            json.dump(self.config,read_file)
+        with open(os.path.join('configs',"config.json"), "r") as read_file:
+            self.config = json.load(read_file)
     def run_game(self):
         while True:
             self.cur_scene.run()
