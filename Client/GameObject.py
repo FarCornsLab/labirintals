@@ -1,54 +1,36 @@
+import pygame
 from pygame.rect import Rect
 
 
 class GameObject:
     def __init__(self, x, y, w, h, speed=(0,0)):
-        self.bounds = Rect(x, y, w, h)
+        self.position = (x,y)
+        self.size = (w,h)
         self.speed = speed
+        self.rot = 0
+        self.is_texture_rotated = False
+        self.texture = None
 
-    @property
-    def left(self):
-        return self.bounds.left
+    def screen_rect_to_global(rect,zoom, camera_offet):
+        return pygame.Rect(((rect.topleft[0] + camera_offet[0])/zoom,(rect.topleft[1] + camera_offet[1])/zoom ),
+                            (rect.size[0] / zoom ,rect.size[0] / zoom))
 
-    @property
-    def right(self):
-        return self.bounds.right
+    def global_rect_to_screen(rect,zoom, camera_offet):
 
-    @property
-    def top(self):
-        return self.bounds.top
+        return pygame.Rect((rect.topleft[0] * zoom + camera_offet[0],rect.topleft[1] * zoom + camera_offet[1] ),
+                            (rect.size[0] * zoom ,rect.size[0] * zoom))
 
-    @property
-    def bottom(self):
-        return self.bounds.bottom
+    def rotate_texture(self):
+        if self.rot != 0:
+            self.draw_texture = pygame.transform.rotate(self.texture,self.rot)
 
-    @property
-    def width(self):
-        return self.bounds.width
-
-    @property
-    def height(self):
-        return self.bounds.height
-
-    @property
-    def center(self):
-        return self.bounds.center
-
-    @property
-    def centerx(self):
-        return self.bounds.centerx
-
-    @property
-    def centery(self):
-        return self.bounds.centery
-
-    def draw(self, surface):
-        pass
+    def draw(self, surface, zoom = 1, camera_offet = (0,0)):
+        self.rotate_texture()
+        self.draw_texture = pygame.transform.scale(self.texture,self.size)
+        surface.blit( self.draw_texture,pygame.Rect(self.position,self.size))
 
     def move(self, dx, dy):
-        self.bounds = self.bounds.move(dx, dy)
+        self.position = (self.position[0]+dx,self.position[1]+dy)
 
-    def update(self):
-        if self.speed == [0, 0]:
-            return
-        self.move(*self.speed)
+    def update(self,time_delta):
+        pass

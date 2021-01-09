@@ -6,7 +6,7 @@ from collections import defaultdict
 
 class Scene:
     def __init__(self,back_image_filename):
-        self.background_image = pygame.image.load(back_image_filename)
+        self.background_image = pygame.image.load(back_image_filename).convert_alpha()
         self.background_image = pygame.transform.scale(self.background_image, pygame.display.get_surface().get_size())
         self.frame_rate = 60
         self.exit_flag = False
@@ -19,14 +19,16 @@ class Scene:
         self.custom_event_handlers = defaultdict(list)
         self.ui_manager = pygame_gui.UIManager(pygame.display.get_surface().get_size())
         self.surface = pygame.display.get_surface()
+        self.zoom = 1
+        self.camera_offset = (0,0)
 
     def update(self):
         for o in self.objects:
-            o.update()
+            o.update(self.time_delta)
 
     def draw(self):
         for o in self.objects:
-            o.draw(self.surface)
+            o.draw(self.surface,self.zoom,self.camera_offset)
 
     def handle_events(self):
         for event in pygame.event.get():

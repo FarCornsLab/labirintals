@@ -1,5 +1,6 @@
 import socket
 import json
+import asyncio
 
 class NetworkManager: 
     def __init__(self,player_name):
@@ -39,7 +40,7 @@ class NetworkManager:
         else:
             json_cmd = {"cmd":cmd,"params":params}
         json_str = json.dumps(json_cmd)
-        json_str += "\n"
+        json_str += "\r\n"
         bytes = json_str.encode()
         self.sock.sendall(bytes)
     
