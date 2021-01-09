@@ -23,7 +23,7 @@ class GetGameParamsCommand : BaseCommand() {
             null
         }
         val response = GameParamsAnswer(
-            startTime = storage.serverParams.timeToString(),
+            startTime = storage.serverParams.timeStart,
             stepTime = storage.serverParams.stepTime,
             players = storage.players.map { it.toClientModel() },
         )

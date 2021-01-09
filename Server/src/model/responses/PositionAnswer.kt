@@ -9,7 +9,9 @@ data class PositionAnswer(
     @SerializedName("step_id")
     val stepId: Int? = null,
     @SerializedName("field_unit")
-    val position: List<Entity>? = null
+    val position: List<Entity>? = null,
+    @SerializedName("next_step_time")
+    val stepTime: Long? = null
 ) {
     override fun toString(): String {
         return Server.gson.toJson(this)

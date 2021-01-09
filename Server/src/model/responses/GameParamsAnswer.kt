@@ -8,7 +8,7 @@ import com.labirintals.server.Server
 
 data class GameParamsAnswer(
     @SerializedName("start_time")
-    val startTime: String? = "0",
+    val startTime: Long? = 0L,
     @SerializedName("step_time")
     val stepTime: Long? = null,
     @SerializedName("players")
