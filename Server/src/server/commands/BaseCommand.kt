@@ -14,11 +14,4 @@ open class BaseCommand {
     open suspend fun doCommand(socketData: SocketDataHolder): String? { return null }
 
     val wrongPlayerResponse = ErrorModel(ErrorCode.NotAuthorized, message = "Игрок не найден")
-
-    val stepResponse: (Int?, StepType?) -> StepAnswer = { stepId, stepType ->
-        StepAnswer(
-            stepId = stepId,
-            stepType = stepType
-        )
-    }
 }

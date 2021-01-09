@@ -24,7 +24,7 @@ class ConnectionCommand(args: Any?) : BaseCommand() {
         val name = params.name
         val response: ConnectionAnswer
         response = if (name != null) {
-            val alreadyExist = storage.players.find { it.name == name } != null
+            val alreadyExist = false //storage.players.find { it.name == name } != null
             if (alreadyExist) {
                 return BaseModel(commandName = TAG, error = ErrorModel(ErrorCode.ErrConflict, "Имя занято")).toString()
             } else {

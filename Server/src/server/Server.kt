@@ -11,8 +11,10 @@ import kotlinx.coroutines.runBlocking
 import com.labirintals.server.managers.LocalStorage
 import com.labirintals.server.managers.ServerManager
 import com.labirintals.server.managers.SocketManager
+import java.nio.charset.Charset
 
 object Server {
+    const val VERSION = "1.0.5"
     val gson = Gson()
     val storage = LocalStorage()
     val serverManager = ServerManager()
@@ -28,7 +30,7 @@ object Server {
 
         runBlocking {
             val serverSocket = aSocket(selectorManager).tcp().bind(port = port)
-            println("Echo Server listening at ${serverSocket.localAddress}")
+            println("Echo Server listening at ${serverSocket.localAddress}. Version: $VERSION")
             while (true) {
                 val socket = serverSocket.accept()
                 println("Accepted $socket")
@@ -42,7 +44,7 @@ object Server {
                             line?.let {
                                 println(it)
                                 socketManager.receiveMessage(line)
-                                storage.saveAll()
+                                //storage.saveAll()
                             }
                         }
                     } catch (e: Throwable) {

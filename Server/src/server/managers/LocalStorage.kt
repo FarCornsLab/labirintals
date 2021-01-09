@@ -17,7 +17,7 @@ import kotlin.properties.Delegates
 
 class LocalStorage {
     companion object {
-        val WAITING_START_SECONDS = 60L
+        val WAITING_START_SECONDS = 5L
         val WAITING_STEP_SECONDS = 30L
     }
 
@@ -42,6 +42,7 @@ class LocalStorage {
 
     private fun startGame() {
         if (gameIsStarted) {
+            lastStepTime = getTimeMillis()
             Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)) {
                 nextStep()
             }
@@ -60,7 +61,6 @@ class LocalStorage {
                 }
             }
         }
-        lastStepTime = getTimeMillis()
         if(gameIsEnd){
             globalStep = PlayerModel.END_GAME
             gameIsStarted = false
@@ -79,7 +79,8 @@ class LocalStorage {
     val labirint = Labirint.read("labirint.json")
 
     val serverParams: ServerSettings by lazy {
-        readServerParams()
+        ServerSettings(timeStart = 0, stepTime = WAITING_STEP_SECONDS)
+        //readServerParams()
     }
 
     private fun readServerParams(): ServerSettings {

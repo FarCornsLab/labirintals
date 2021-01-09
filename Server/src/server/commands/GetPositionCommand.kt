@@ -3,7 +3,9 @@ package com.labirintals.server.commands
 import com.labirintals.model.BaseModel
 import com.labirintals.model.responses.PositionAnswer
 import com.labirintals.server.Server
+import com.labirintals.server.managers.LocalStorage
 import com.labirintals.server.managers.SocketDataHolder
+import java.util.concurrent.TimeUnit
 
 class GetPositionCommand : BaseCommand() {
     companion object {
@@ -20,12 +22,19 @@ class GetPositionCommand : BaseCommand() {
         return if (player == null) {
             BaseModel(commandName = MakeStepCommand.TAG, error = wrongPlayerResponse).toString()
         } else {
-            if (Server.storage.globalStep == -1) {
-                player.stepId = -1
-            }
+            player.stepId = Server.storage.globalStep
+//            if (Server.storage.globalStep == -1) {
+//                player.stepId = -1
+//            }
             BaseModel(
                 commandName = TAG,
-                commandParams = PositionAnswer(player.stepId, player.borders)
+                commandParams = PositionAnswer(
+                    player.stepId, player.borders, Server.storage.lastStepTime?.plus(
+                        TimeUnit.SECONDS.toMillis(
+                            LocalStorage.WAITING_START_SECONDS
+                        )
+                    )
+                )
             ).toString()
         }
     }
