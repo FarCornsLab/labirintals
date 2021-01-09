@@ -9,6 +9,7 @@ from MainMenu import MainMenu
 from FindServerMenu import FindServerMenu
 from NetworkManager import NetworkManager
 from WaitStartGameMenu import WaitStartGameMenu
+from GameScene import GameScene
 
 def resource_path(relative):
     relative = os.path.join('resource',relative)
@@ -28,7 +29,7 @@ class Core:
         self.cur_scene:Scene = None
         self.next_scene:Scene = None
         print("Core inited")
-        self.scenes_pull = {"MainMenu":MainMenu,"FindServerMenu":FindServerMenu,"WaitStartGameMenu":WaitStartGameMenu}
+        self.scenes_pull = {"MainMenu":MainMenu,"FindServerMenu":FindServerMenu,"WaitStartGameMenu":WaitStartGameMenu,"GameScene":GameScene}
         self.net_manager = NetworkManager(self.config["player_name"])
     def load_scene(self,scene_str:str):
         if self.cur_scene == None:

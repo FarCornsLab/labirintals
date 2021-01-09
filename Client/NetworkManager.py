@@ -39,9 +39,7 @@ class NetworkManager:
             json_cmd = {"cmd":cmd,"params":params}
         json_str = json.dumps(json_cmd)
         json_str += "\n"
-        a = len(json_str)
         bytes = json_str.encode()
-        b = len(bytes)
         self.sock.sendall(bytes)
     
     def recv_answer(self):
