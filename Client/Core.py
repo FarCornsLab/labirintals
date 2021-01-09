@@ -42,6 +42,7 @@ class Core:
             json.dump(self.config,read_file)
         with open(os.path.join('configs',"config.json"), "r") as read_file:
             self.config = json.load(read_file)
+        self.net_manager.player_name = self.config["player_name"]
     def run_game(self):
         while True:
             self.cur_scene.run()

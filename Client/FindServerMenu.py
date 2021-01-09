@@ -1,6 +1,7 @@
 import pygame
 import sys
 from collections import defaultdict
+from pygame import surface
 
 from pygame_gui import ui_manager
 from Scene import Scene
@@ -10,7 +11,7 @@ import pygame_gui
 
 class FindServerMenu(Scene):
     def __init__(self):
-        super().__init__(Core.resource_path(os.path.join('images','MainMenu_backgraund.png')))
+        super().__init__(pygame.image.load(Core.resource_path(os.path.join('images','MainMenu_backgraund.png'))).convert())
         self._create_menu()
 
     def _create_menu(self):

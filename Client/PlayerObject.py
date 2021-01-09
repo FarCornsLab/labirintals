@@ -6,7 +6,7 @@ import Core
 import os
 
 class PlayerObject(GameObject):
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w = 50, h =50):
         super().__init__(x,y,w,h)
         self.animation_speed = 5
         self.cur_frame = 0
@@ -27,9 +27,9 @@ class PlayerObject(GameObject):
     def rotate_texture(self):
         pass
 
-    def update(self,time_delta):
+    def update(self,time_delta, zoom = 1, camera_offset = (0,0)):
        #self.move(10*time_delta,5*time_delta)
-        self.rot += 90*time_delta
+        #self.rot += 90*time_delta
         self.cur_frame = self.cur_frame + self.animation_speed * time_delta
         if self.cur_frame > 2:
            self.cur_frame = 0
