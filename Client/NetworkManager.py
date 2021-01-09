@@ -13,6 +13,7 @@ class NetworkManager:
 
     def connect(self,ip,port):
         self.sock = socket.socket()
+        self.sock.setblocking(True)
         self.sock.connect((ip,port))
         try:
             self.send_cmd(cmd ="connection",params ={"name":self.player_name})
@@ -46,7 +47,7 @@ class NetworkManager:
         json_str = ""
         buf = self.sock.recv(self.buf_size)
         json_str += buf.decode()
-        while buf[len(buf)-1] != ord("\n"):
+        while len(buf) > 0 and buf[len(buf)-1] != ord("\n"):
             buf = self.sock.recv(self.buf_size)
             if(len(buf) > 0):
                 json_str += buf.decode()
