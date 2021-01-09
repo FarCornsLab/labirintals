@@ -16,9 +16,7 @@ class WaitStartGameMenu(Scene):
         super().__init__(Core.resource_path(os.path.join('images','MainMenu_backgraund.png')))
         self.max_players = 4
         self.game_params = Core.core.net_manager.game_params
-        #self.game_params = {}
-        #self.game_params["start_time"] = 0
-        #self.player_list = [{"name":"player1"},{"name":"player2"}]
+        self.start_time = 0
         self.update_game_state_event = pygame.USEREVENT + 1
         self.custom_event_handlers[self.update_game_state_event].append(self.update_game_state)
         self.player_list = self.game_params["players"]
@@ -61,9 +59,13 @@ class WaitStartGameMenu(Scene):
         self.player_list_ui.set_item_list(sel_item_list)
 
         if self.game_params["start_time"] == "0":
+            self.start_time = 100
             self.start_timer_label.set_text("Wait players" + ("."*random.randint(0,4)))
         else:
-            self.start_timer_label.set_text("Game starts in " + str(int(int(self.game_params["start_time"])/1000 -time.time())) + " sec" )
+            self.start_time = int(int(self.game_params["start_time"])/1000 -time.time())
+            self.start_timer_label.set_text("Game starts in " + str(self.start_time) + " sec" )
+            if self.start_time == 0:
+                Core.core.load_scene("GameScene")
 
 
     def btn_disconect_pressed(self, event):
