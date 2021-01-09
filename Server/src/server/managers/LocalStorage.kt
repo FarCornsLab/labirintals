@@ -42,6 +42,7 @@ class LocalStorage {
 
     private fun startGame() {
         if (gameIsStarted) {
+            lastStepTime = getTimeMillis()
             Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)) {
                 nextStep()
             }
@@ -60,7 +61,6 @@ class LocalStorage {
                 }
             }
         }
-        lastStepTime = getTimeMillis()
         if(gameIsEnd){
             globalStep = PlayerModel.END_GAME
             gameIsStarted = false
