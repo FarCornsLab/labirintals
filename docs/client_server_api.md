@@ -135,14 +135,11 @@ JSON отправляется строкой, символ "\n" является
 Параметры:  
 * нет
 
-Ответ: `connection_answer`.  
+Ответ: `disconnect_answer`.  
 Пример запроса:
 
     {
-        "cmd": "connection",
-        "params": {
-            "name": "Bender Bending Rodríguez"
-        }
+        "cmd": "disconnect"
     }
 
 #### `disconnect_answer`:
