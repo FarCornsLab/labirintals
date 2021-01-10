@@ -21,6 +21,7 @@ public:
 
     /** Did step */
     bool doStep() final {
+        beforeStep();
         bool result = executor_->doStep();
         afterStep(result);
         return result;
@@ -38,6 +39,8 @@ protected:
     /** Method executed after connection */
     virtual void afterConnect(bool connect_result) = 0;
 
+    /** Method executed before step */
+    virtual void beforeStep() = 0;
     /** Method executed after step */
     virtual void afterStep(bool step_result) = 0;
 

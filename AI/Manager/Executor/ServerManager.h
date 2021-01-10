@@ -29,8 +29,7 @@ private:
     std::shared_ptr<Client> client_;
     ServerConfig connection_config_;
     std::string bot_name_;
-    int oid_;
-    int cid_;
+    std::string oid_;
     std::optional<std::vector<std::string>> winners_;
 };
 

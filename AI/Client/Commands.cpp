@@ -9,9 +9,10 @@
 
 namespace s_cmd {
 bool Player::fromJson(nlohmann::json &json) {
+    std::cout << json.dump() << std::endl;
     try {
         name = json.at("name").get<std::string>();
-        oid = json.at("oid").get<int>();
+        oid = json.at("oid").get<std::string>();
     }  catch (const std::exception& ex) {
         return false;
     }
@@ -55,7 +56,8 @@ bool Map::fromJson(nlohmann::json &json) {
 bool ServerError::fromJson(nlohmann::json &json) {
     try {
         code = json.at("code").get<int>();
-        message = json.at("message").get<std::string>();
+        // TODO:
+        message = "";// json.at("message").get<std::string>();
     }  catch (const std::exception& ex) {
         return false;
     }
@@ -65,7 +67,10 @@ bool ServerError::fromJson(nlohmann::json &json) {
 std::string ServerCommand::toString() {
     nlohmann::json json;
     json["cmd"] = cmd;
-    json["params"] = toJson();
+    auto params = toJson();
+    if (!params.empty()) {
+        json["params"] = toJson();
+    }
     return json.dump();
 }
 
@@ -80,6 +85,7 @@ bool ServerAnswer::fromString(const std::string& s) {
 
         auto it = json.find("error");
         if (it != json.end()) {
+            error = ServerError();
             if (!error->fromJson(*it)) {
                 return false;
             }
@@ -100,7 +106,8 @@ std::shared_ptr<ServerAnswer> ServerAnswer::createFromString(const std::string& 
             REGISTER_ANSWER(ConnectionAnswer),
             REGISTER_ANSWER(GameParams),
             REGISTER_ANSWER(StepAnswer),
-            REGISTER_ANSWER(GameResult)
+            REGISTER_ANSWER(GameResult),
+            REGISTER_ANSWER(PositionAnswer)
     };
 
     nlohmann::json json = nlohmann::json::parse(s);
@@ -128,13 +135,13 @@ std::shared_ptr<ServerAnswer> ServerAnswer::initObj(std::shared_ptr<ServerAnswer
 }
 
 bool ConnectionAnswer::fromJson(nlohmann::json &json) {
+    nlohmann::json player_json;
     try {
-        oid = json.at("oid").get<int>();
-        cid = json.at("сid").get<int>();
+        player_json = json.at("player");
     }  catch (const std::exception& ex) {
         return false;
     }
-    return true;
+    return player.fromJson(player_json);
 }
 
 bool GameParams::fromJson(nlohmann::json &json) {

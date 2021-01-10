@@ -40,7 +40,7 @@ void Map::makeStep(const StepDirection direction, const BordersInPoint& borders)
     player_position_ = getOffsetted(direction);
     border_map_.set(player_position_, borders);
 
-    if (backStep(track_.top()) == direction) {
+    if (!track_.empty() && backStep(track_.top()) == direction) {
         track_.pop();
     } else {
         track_.push(direction);

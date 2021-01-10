@@ -5,10 +5,12 @@
 
 /** Types of border */
 enum class BorderType: unsigned int {
-    unknown = 0,
+    start = 0,
+    unknown = start,
     open,
     close,
-    is_exit
+    is_exit,
+    max = is_exit
 };
 
 /** Position of border */

@@ -15,7 +15,6 @@ public:
 
     friend class ManagerVisualization;
 
-    // TODO: remove
     virtual bool connect() = 0;
     virtual bool doStep() = 0;
     virtual bool isIWin() = 0;

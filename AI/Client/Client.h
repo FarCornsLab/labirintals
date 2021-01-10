@@ -36,6 +36,8 @@ public:
         return s_cmd::ServerAnswer::get<T>(answer.value());
     }
 
+    static void makeDelay();
+
 protected:
     asio::io_context context_;
     asio::ip::tcp::socket tcp_socket_;
@@ -43,14 +45,14 @@ protected:
     asio::ip::tcp::resolver::query query_;
     std::ostream& out_;
 
-    /** Send request to the server and get answer */
-    std::optional<std::string> request(const std::string& request);
-
     /** Send request without getting answer */
     bool sendRequest(const std::string& request);
 
     /** Get answer from the server */
     std::optional<std::string> getAnswer();
+
+    /** Send request to the server and get answer */
+    std::optional<std::string> request(const std::string& request);
 };
 
 

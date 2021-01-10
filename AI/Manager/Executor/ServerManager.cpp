@@ -26,8 +26,7 @@ bool ServerManager::connect() {
         return false;
     }
 
-    oid_ = answer->oid;
-    cid_ = answer->cid;
+    oid_ = answer->player.oid;
 
     auto connection_result = field_->connect();
     if (!connection_result.has_value()) {
@@ -69,13 +68,13 @@ bool ServerManager::isIWin() {
 std::optional<std::vector<std::string>> ServerManager::getWinners() {
     s_cmd::GetGameResult request;
     auto server_answer = client_->request<s_cmd::GameResult>(&request);
-    if (!server_answer.has_value()) {
+    if (!server_answer.has_value() || server_answer->error.has_value()) {
         return std::nullopt;
     }
 
     std::vector<std::string> answer;
     for (auto& i: server_answer->winners) {
-        answer.emplace_back(i.name + " (" + std::to_string(i.oid) + ")");
+        answer.emplace_back(i.name + " (" + i.oid + ")");
     }
 
     return answer;

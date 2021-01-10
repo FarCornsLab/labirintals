@@ -1,11 +1,6 @@
 #include "ServerField.h"
 
-#include <random>
-
 std::optional<BordersInPoint> ServerField::connect() {
-    std::mt19937 gen(time(0));
-    std::uniform_int_distribution<> uid(100, 1500);
-
     while (true) {
         s_cmd::GetGameParams request;
         auto answer = client_->request<s_cmd::GameParams>(&request);
@@ -15,13 +10,13 @@ std::optional<BordersInPoint> ServerField::connect() {
         if (answer->startTime > 0) {
             break;
         }
-        sleep(uid(gen));
+        Client::makeDelay();
     }
 
     while (true) {
         s_cmd::GetPosition request;
         auto answer = client_->request<s_cmd::PositionAnswer>(&request);
-        if (!answer.has_value() || answer->stepId <= 0) {
+        if (!answer.has_value() || answer->stepId < 0) {
             return std::nullopt;
         }
 
@@ -29,7 +24,7 @@ std::optional<BordersInPoint> ServerField::connect() {
             return getBorders(answer->fieldUnit);
         }
 
-        sleep(uid(gen));
+        Client::makeDelay();
     }
 }
 
@@ -58,24 +53,34 @@ std::optional<BordersInPoint> ServerField::getBorders(const std::vector<std::str
 }
 
 std::optional<BordersInPoint> ServerField::makeStep(const std::string& direction) {
-    std::mt19937 gen(time(0));
-    std::uniform_int_distribution<> uid(100, 1000);
-
-    {
+    while (true) {
         s_cmd::MakeStep request(stepId_, direction);
         auto answer = client_->request<s_cmd::StepAnswer>(&request);
         if (!answer.has_value()) {
             return std::nullopt;
         }
 
+        if (answer->error.has_value() && answer->error->code == 405) {
+            s_cmd::Step request;
+            auto answer = client_->request<s_cmd::StepAnswer>(&request);
+            if (!answer.has_value() || answer->stepId <= 0) {
+                return std::nullopt;
+            }
+
+            stepId_ = answer->stepId;
+            continue;
+        }
+
         stepId_ = answer->stepId;
         if (stepId_ < 0) {
             return std::nullopt;
+        } else {
+            break;
         }
     }
 
     while (true) {
-        sleep(uid(gen));
+        Client::makeDelay();
 
         s_cmd::Step request;
         auto answer = client_->request<s_cmd::StepAnswer>(&request);

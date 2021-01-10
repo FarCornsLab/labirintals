@@ -19,7 +19,7 @@ struct AnsStruct {
 /***** SERVER STRUCT *****/
 struct Player : public AnsStruct {
     std::string name;
-    int oid;
+    std::string oid;
 
     bool fromJson(nlohmann::json& json) final;
 };
@@ -101,8 +101,7 @@ protected:
 struct ConnectionAnswer : public ServerAnswer {
     ConnectionAnswer() : ServerAnswer("connection_answer") {}
 
-    int oid;
-    int cid;
+    Player player;
 
 protected:
     bool fromJson(nlohmann::json& json) final;
