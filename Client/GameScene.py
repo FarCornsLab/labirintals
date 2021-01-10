@@ -44,6 +44,7 @@ class GameScene(Scene):
         Core.core.net_manager.send_cmd("make_step",{"step_id":self.cur_step_id,"step_type":self.next_step})
         self.cur_step_answer = Core.core.net_manager.recv_answer()
         if "error" in self.cur_step_answer:
+            self.next_step  = None
             self.make_step()
         #self.next_step_time = self.cur_step_answer["params"]["next_step_time"]
 
