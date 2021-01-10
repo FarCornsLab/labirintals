@@ -16,10 +16,10 @@ protected:
     void beforeConnect(const std::string& connect_params) override;
     void afterConnect(bool connect_result) override;
 
+    void beforeStep() override;
     void afterStep(bool step_result) override;
 
 private:
-    unsigned int step_counter_ = 0;
     std::ostream& out_;
 };
 
