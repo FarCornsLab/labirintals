@@ -7,8 +7,6 @@ import com.labirintals.server.Server
 import com.labirintals.server.labirint.Labirint
 import io.ktor.util.date.*
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -25,7 +23,7 @@ class LocalStorage {
     private val serverParamsSaving = "server.json"
 
     var gameIsStarted = false
-    var lastStepTime: Long? = null
+    var stepTimeTo: Long? = null
     val players = ArrayList<PlayerModel>()
     var globalStep = 0
     val newPlayers = ArrayList<PlayerModel>()
@@ -33,7 +31,7 @@ class LocalStorage {
 
     private fun startTimer() {
         serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)
-        lastStepTime = serverParams.timeStart
+        stepTimeTo = serverParams.timeStart!! + TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)
         Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)) {
             gameIsStarted = true
             globalStep = 1
@@ -45,6 +43,7 @@ class LocalStorage {
         if (gameIsStarted) {
             Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)) {
                 nextStep()
+                stepTimeTo = getTimeMillis() + TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)
             }
         }
     }
@@ -61,10 +60,10 @@ class LocalStorage {
                 }
             }
         }
-        if(gameIsEnd){
+        if (gameIsEnd) {
             globalStep = PlayerModel.END_GAME
             gameIsStarted = false
-        }else {
+        } else {
             globalStep += 1
             startGame()
         }
