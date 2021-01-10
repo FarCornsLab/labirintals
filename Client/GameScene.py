@@ -46,6 +46,8 @@ class GameScene(Scene):
         if "error" in self.cur_step_answer:
             self.next_step  = None
             self.make_step()
+            return False
+        return True
         #self.next_step_time = self.cur_step_answer["params"]["next_step_time"]
 
     def make_step(self):
@@ -91,7 +93,8 @@ class GameScene(Scene):
         gl_point  = self.screen_point_to_global(event.pos)
         for aim in self.aims:
              if aim.colidepoint(gl_point):
-                 self.send_step(aim.name)
+                 if not self.send_step(aim.name):
+                     return
                  for aim2 in self.aims:
                     aim2.picked = False
                  aim.picked = True
