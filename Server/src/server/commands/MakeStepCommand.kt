@@ -27,6 +27,7 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
         }
 
         val player = socketData.player ?: return BaseModel(commandName = TAG, error = wrongPlayerResponse).toString()
+        println("GLOBAL STEP: ${Server.storage.globalStep}")
         if (params.stepId == Server.storage.globalStep) {
             val tempPlayer = player.copy()
             val resCode = tempPlayer.updateStep(params)

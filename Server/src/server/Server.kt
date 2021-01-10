@@ -15,7 +15,7 @@ import com.labirintals.server.managers.SocketManager
 import java.io.File
 
 object Server {
-    const val VERSION = "1.1.1"
+    const val VERSION = "1.1.2"
     val gson = Gson()
     val storage = LocalStorage()
     val serverManager = ServerManager()
@@ -46,6 +46,7 @@ object Server {
         runBlocking {
             val serverSocket = aSocket(selectorManager).tcp().bind(hostname = config.ip, port = config.port)
             println("Echo Server listening at ${serverSocket.localAddress}. Version: $VERSION")
+            println("config: $config")
             while (true) {
                 val socket = serverSocket.accept()
                 println("Accepted $socket")
