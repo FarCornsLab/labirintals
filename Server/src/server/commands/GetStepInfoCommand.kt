@@ -19,7 +19,7 @@ class GetStepInfoCommand : BaseCommand() {
 
         return BaseModel(
             commandName = TAG,
-            commandParams = if (player != null) StepAnswer(player.stepId, player.stepType) else null,
+            commandParams = if (player != null) StepAnswer(Server.storage.globalStep, player.stepType) else null,
             error = if (player == null) wrongPlayerResponse else null
         ).toString()
     }

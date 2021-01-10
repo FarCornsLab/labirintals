@@ -14,7 +14,7 @@ import com.labirintals.server.managers.SocketManager
 import java.nio.charset.Charset
 
 object Server {
-    const val VERSION = "1.0.5"
+    const val VERSION = "1.0.8"
     val gson = Gson()
     val storage = LocalStorage()
     val serverManager = ServerManager()

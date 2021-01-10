@@ -33,6 +33,7 @@ class LocalStorage {
 
     private fun startTimer() {
         serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)
+        lastStepTime = serverParams.timeStart
         Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)) {
             gameIsStarted = true
             globalStep = 1
@@ -42,7 +43,6 @@ class LocalStorage {
 
     private fun startGame() {
         if (gameIsStarted) {
-            lastStepTime = getTimeMillis()
             Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)) {
                 nextStep()
             }
