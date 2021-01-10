@@ -26,14 +26,15 @@ class GetPositionCommand : BaseCommand() {
 //            if (Server.storage.globalStep == -1) {
 //                player.stepId = -1
 //            }
+            val nextStep = if (Server.storage.lastStepTime != null) {
+                Server.storage.lastStepTime!! + TimeUnit.SECONDS.toMillis(LocalStorage.WAITING_START_SECONDS)
+            } else {
+                null
+            }
             BaseModel(
                 commandName = TAG,
                 commandParams = PositionAnswer(
-                    player.stepId, player.borders, Server.storage.lastStepTime?.plus(
-                        TimeUnit.SECONDS.toMillis(
-                            LocalStorage.WAITING_START_SECONDS
-                        )
-                    )
+                    player.stepId, player.borders, nextStep
                 )
             ).toString()
         }
