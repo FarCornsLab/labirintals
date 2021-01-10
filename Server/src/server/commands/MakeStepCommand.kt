@@ -1,6 +1,7 @@
 package com.labirintals.server.commands
 
 import com.labirintals.ErrorCode
+import com.labirintals.ErrorNames
 import com.labirintals.model.BaseModel
 import com.labirintals.model.base.ErrorModel
 import com.labirintals.model.base.PlayerModel
@@ -27,7 +28,7 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
         }
 
         val player = socketData.player ?: return BaseModel(commandName = TAG, error = wrongPlayerResponse).toString()
-        println("GLOBAL STEP: ${Server.storage.globalStep}")
+        //println("GLOBAL STEP: ${Server.storage.globalStep}")
         if (params.stepId == Server.storage.globalStep) {
             val tempPlayer = player.copy()
             val resCode = tempPlayer.updateStep(params)
@@ -41,7 +42,7 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
             if (resCode == PlayerModel.OBSTACLE) {
                 return BaseModel(
                     commandName = TAG,
-                    error = ErrorModel(ErrorCode.ErrGame, "Ход в стену запрещен.")
+                    error = ErrorModel(ErrorCode.ErrGame, ErrorNames.ErrNoStep)
                 ).toString()
             }
 
@@ -62,10 +63,9 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
         }
     }
 
-    private val wrongStepTime = ErrorModel(ErrorCode.ErrGame, "Время хода вышло")
+    private val wrongStepTime = ErrorModel(ErrorCode.ErrGame, ErrorNames.ErrTimeIsOver)
 
-    private val wrongStartGameResponse = ErrorModel(ErrorCode.ErrGame, message = "Игра еще не началась")
+    private val wrongStartGameResponse = ErrorModel(ErrorCode.ErrGame, message = ErrorNames.ErrGameIsNotStarted)
 
-    private val wrongEndGameResponse = ErrorModel(ErrorCode.ErrGame, message = "Игра уже закончилась")
-
+    private val wrongEndGameResponse = ErrorModel(ErrorCode.ErrGame, message = ErrorNames.ErrGameAlreadyEnd)
 }

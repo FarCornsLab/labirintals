@@ -1,6 +1,7 @@
 package com.labirintals.server.commands
 
 import com.labirintals.ErrorCode
+import com.labirintals.ErrorNames
 import com.labirintals.model.BaseModel
 import com.labirintals.model.base.ErrorModel
 import com.labirintals.model.responses.GetGameResultResponse
@@ -23,6 +24,6 @@ class GetGameResultCommand : BaseCommand() {
                 return BaseModel(commandName = TAG, commandParams = res).toString()
             }
         }
-        return BaseModel(commandName = TAG, error = ErrorModel(ErrorCode.ErrGame, "Победителей нет")).toString()
+        return BaseModel(commandName = TAG, error = ErrorModel(ErrorCode.ErrGame, ErrorNames.ErrNoWinners)).toString()
     }
 }

@@ -1,6 +1,7 @@
 package com.labirintals.server.commands
 
 import com.labirintals.ErrorCode
+import com.labirintals.ErrorNames
 import com.labirintals.model.base.ErrorModel
 import com.labirintals.model.base.PlayerModel
 import com.labirintals.model.requests.StepType
@@ -13,5 +14,5 @@ import java.io.BufferedWriter
 open class BaseCommand {
     open suspend fun doCommand(socketData: SocketDataHolder): String? { return null }
 
-    val wrongPlayerResponse = ErrorModel(ErrorCode.NotAuthorized, message = "Игрок не найден")
+    val wrongPlayerResponse = ErrorModel(ErrorCode.NotAuthorized, message = ErrorNames.ErrNoPlayer)
 }

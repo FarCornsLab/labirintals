@@ -1,6 +1,7 @@
 package com.labirintals.server.commands
 
 import com.labirintals.ErrorCode
+import com.labirintals.ErrorNames
 import com.labirintals.model.BaseModel
 import com.labirintals.model.base.ErrorModel
 import com.labirintals.model.responses.ConnectionAnswer
@@ -18,7 +19,7 @@ class GetGameParamsCommand : BaseCommand() {
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {
         val error = if (storage.players.isEmpty()) {
-            ErrorModel(code = ErrorCode.ErrBadRequest, message = "Массив игроков пуст")
+            ErrorModel(code = ErrorCode.ErrBadRequest, message = ErrorNames.ErrNoPlayers)
         } else {
             null
         }
@@ -27,6 +28,11 @@ class GetGameParamsCommand : BaseCommand() {
             stepTime = storage.serverParams.stepTime,
             players = storage.players.map { it.toClientModel() },
         )
-        return BaseModel(commandName = TAG, commandParams = response, error = error).toString()
+
+        return BaseModel(
+            commandName = TAG,
+            commandParams = if (error == null) response else null,
+            error = error
+        ).toString()
     }
 }

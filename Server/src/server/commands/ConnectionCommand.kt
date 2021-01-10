@@ -1,6 +1,7 @@
 package com.labirintals.server.commands
 
 import com.labirintals.ErrorCode
+import com.labirintals.ErrorNames
 import com.labirintals.model.BaseModel
 import com.labirintals.model.base.ErrorModel
 import com.labirintals.model.base.PlayerModel
@@ -26,7 +27,7 @@ class ConnectionCommand(args: Any?) : BaseCommand() {
         response = if (name != null) {
             val alreadyExist = false //storage.players.find { it.name == name } != null
             if (alreadyExist) {
-                return BaseModel(commandName = TAG, error = ErrorModel(ErrorCode.ErrConflict, "Имя занято")).toString()
+                return BaseModel(commandName = TAG, error = ErrorModel(ErrorCode.ErrConflict, ErrorNames.ErrBusyName)).toString()
             } else {
                 val pos = storage.labirint.spawn
                 socketData.player = PlayerModel(
@@ -41,7 +42,7 @@ class ConnectionCommand(args: Any?) : BaseCommand() {
                 ConnectionAnswer(true, player = socketData.player!!.toClientModel())
             }
         } else {
-            return BaseModel(commandName = TAG, error = ErrorModel(ErrorCode.ErrBadRequest, "Введите имя пользователя")).toString()
+            return BaseModel(commandName = TAG, error = ErrorModel(ErrorCode.ErrBadRequest, ErrorNames.ErrNoUserName)).toString()
         }
         //storage.labirint.printLabirint()
         return BaseModel(commandName = TAG, commandParams = response).toString()
