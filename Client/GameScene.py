@@ -32,6 +32,7 @@ class GameScene(Scene):
         self.aims_start_num = -1
         self.cur_step_id = -1
         self.next_step_time = -100
+        self.next_step = "Start"
         self.make_step()
         self.sec_timer_event = pygame.event.custom_type()
         self.custom_event_handlers[self.sec_timer_event].append(self.sec_timer_event_handler)
@@ -42,18 +43,20 @@ class GameScene(Scene):
         self.player.rot = {"up":0,"down":180,"left":270,"right":90}[self.next_step]
         Core.core.net_manager.send_cmd("make_step",{"step_id":self.cur_step_id+1,"step_type":self.next_step})
         self.cur_step_answer = Core.core.net_manager.recv_answer()
-        self.next_step_time = self.cur_step_answer["params"]["next_step_time"]
+        #self.next_step_time = self.cur_step_answer["params"]["next_step_time"]
 
     def make_step(self):
         self.request_maze_position()
         if self.cur_step_id == self.cur_maze_position["params"]["step_id"]:
             return
         self.cur_step_id = self.cur_maze_position["params"]["step_id"] 
+        if self.next_step == None:
+            return
         if self.aims_start_num != -1:
             for i in range(len(self.aims)):
                 self.objects.pop(self.aims_start_num)
         self.aims.clear()
-        direction_to_point = {"up":(0,100),"down":(0,-100),"left":(-100,0),"right":(100,0)}
+        direction_to_point = {"up":(0,-100),"down":(0,100),"left":(-100,0),"right":(100,0)}
         if self.cur_maze_block == None:
             self.cur_maze_block = MazeBlock(self.cur_maze_position["params"]["field_unit"],
                                         200 ,
@@ -63,6 +66,7 @@ class GameScene(Scene):
                                         self.cur_maze_block.position[0] + direction_to_point[self.next_step][0] ,
                                         self.cur_maze_block.position[1] + direction_to_point[self.next_step][1])
         self.objects.insert(0,self.cur_maze_block)
+
         if self.cur_maze_position["params"]["field_unit"][0] != "obstacle":
             self.aims.append(AimObject(self.cur_maze_block.position[0],self.cur_maze_block.position[1] - self.cur_maze_block.size[1],name ="up"))
 
@@ -77,6 +81,7 @@ class GameScene(Scene):
         self.aims_start_num = len(self.objects)
         self.objects.extend(self.aims)
         self.player.set_center(self.cur_maze_block.get_center())
+        self.next_step = None
 
     def mouse_button_down(self,event):
         self.mouse_but_state[event.button] = True
@@ -131,7 +136,7 @@ class GameScene(Scene):
     
     def sec_timer_event_handler(self,event):
         self.time_left = int(int(self.next_step_time)/1000 -time.time())
-        self.next_step_timer_label.set_text("Time to next step "+ str(self.time_left))
+        self.next_step_timer_label.set_text("Time to next step "+ str(max(self.time_left,0)))
         if self.time_left < 0 :
             self.make_step()
 
