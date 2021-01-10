@@ -40,9 +40,9 @@ class GameScene(Scene):
     def send_step(self,direction):
         self.next_step  = direction
         self.player.rot = {"up":0,"down":180,"left":270,"right":90}[self.next_step]
-        Core.core.net_manager.send_cmd("make_step",{"step_id":self.cur_step_id,"step_type":self.next_step})
+        Core.core.net_manager.send_cmd("make_step",{"step_id":self.cur_step_id+1,"step_type":self.next_step})
         self.cur_step_answer = Core.core.net_manager.recv_answer()
-        #self.next_step_time = self.cur_step_answer["params"]["next_step_time"]
+        self.next_step_time = self.cur_step_answer["params"]["next_step_time"]
 
     def make_step(self):
         self.request_maze_position()
@@ -101,7 +101,7 @@ class GameScene(Scene):
     def request_maze_position(self):
         Core.core.net_manager.send_cmd("get_position")
         self.cur_maze_position = Core.core.net_manager.recv_answer()
-        #self.next_step_time = self.cur_maze_position["params"]["next_step_time"]
+        self.next_step_time = self.cur_maze_position["params"]["next_step_time"]
     #    self.cur_maze_position = {"field_unit":[
     #         "obstacle",
     #         "free",
@@ -132,9 +132,8 @@ class GameScene(Scene):
     def sec_timer_event_handler(self,event):
         self.time_left = int(int(self.next_step_time)/1000 -time.time())
         self.next_step_timer_label.set_text("Time to next step "+ str(self.time_left))
-        if self.time_left <= 0 :
-            pass
-            #self.make_step()
+        if self.time_left < 0 :
+            self.make_step()
 
     def btn_disconect_pressed(self, event):
         Core.core.net_manager.disconnect()
