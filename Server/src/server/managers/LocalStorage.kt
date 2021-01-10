@@ -7,8 +7,6 @@ import com.labirintals.server.Server
 import com.labirintals.server.labirint.Labirint
 import io.ktor.util.date.*
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -16,24 +14,21 @@ import kotlin.concurrent.schedule
 import kotlin.properties.Delegates
 
 class LocalStorage {
-    companion object {
-        val WAITING_START_SECONDS = 60L
-        val WAITING_STEP_SECONDS = 30L
-    }
 
     private val playersSaving = "players.json"
     private val serverParamsSaving = "server.json"
 
     var gameIsStarted = false
-    var lastStepTime: Long? = null
+    var stepTimeTo: Long? = null
     val players = ArrayList<PlayerModel>()
     var globalStep = 0
     val newPlayers = ArrayList<PlayerModel>()
     val winners = ArrayList<ClientModel>()
 
     private fun startTimer() {
-        serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)
-        Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)) {
+        serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(Server.config.waitingTime)
+        stepTimeTo = serverParams.timeStart!! + TimeUnit.SECONDS.toMillis(Server.config.stepTime)
+        Timer().schedule(TimeUnit.SECONDS.toMillis(Server.config.waitingTime)) {
             gameIsStarted = true
             globalStep = 1
             startGame()
@@ -42,8 +37,9 @@ class LocalStorage {
 
     private fun startGame() {
         if (gameIsStarted) {
-            Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)) {
+            Timer().schedule(TimeUnit.SECONDS.toMillis(Server.config.stepTime)) {
                 nextStep()
+                stepTimeTo = getTimeMillis() + TimeUnit.SECONDS.toMillis(Server.config.stepTime)
             }
         }
     }
@@ -60,11 +56,10 @@ class LocalStorage {
                 }
             }
         }
-        lastStepTime = getTimeMillis()
-        if(gameIsEnd){
+        if (gameIsEnd) {
             globalStep = PlayerModel.END_GAME
             gameIsStarted = false
-        }else {
+        } else {
             globalStep += 1
             startGame()
         }
@@ -79,7 +74,8 @@ class LocalStorage {
     val labirint = Labirint.read("labirint.json")
 
     val serverParams: ServerSettings by lazy {
-        readServerParams()
+        ServerSettings(timeStart = 0, stepTime = Server.config.waitingTime)
+        //readServerParams()
     }
 
     private fun readServerParams(): ServerSettings {

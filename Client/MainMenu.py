@@ -8,7 +8,7 @@ import pygame_gui
 
 class MainMenu(Scene):
     def __init__(self):
-        super().__init__(Core.resource_path(os.path.join('images','MainMenu_backgraund.png')))
+        super().__init__(pygame.image.load(Core.resource_path(os.path.join('images','MainMenu_backgraund.png'))).convert())
         self._create_menu()
     def _create_menu(self):
         w,h = pygame.display.get_surface().get_size()

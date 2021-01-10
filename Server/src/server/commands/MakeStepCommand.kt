@@ -27,16 +27,17 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
         }
 
         val player = socketData.player ?: return BaseModel(commandName = TAG, error = wrongPlayerResponse).toString()
+        println("GLOBAL STEP: ${Server.storage.globalStep}")
         if (params.stepId == Server.storage.globalStep) {
             val tempPlayer = player.copy()
             val resCode = tempPlayer.updateStep(params)
-            if (resCode == PlayerModel.END_GAME) {
-                //Server.storage.globalStep = PlayerModel.END_GAME
-                return BaseModel(
-                    commandName = TAG,
-                    commandParams = StepAnswer(PlayerModel.END_GAME, params.stepType)
-                ).toString()
-            }
+//            if (resCode == PlayerModel.END_GAME) {
+//                //Server.storage.globalStep = PlayerModel.END_GAME
+//                return BaseModel(
+//                    commandName = TAG,
+//                    commandParams = StepAnswer(PlayerModel.END_GAME, params.stepType)
+//                ).toString()
+//            }
             if (resCode == PlayerModel.OBSTACLE) {
                 return BaseModel(
                     commandName = TAG,
@@ -44,6 +45,7 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
                 ).toString()
             }
 
+            tempPlayer.stepId = resCode
             val oldTempPlayer = Server.storage.newPlayers.find { it.oid == tempPlayer.oid && it.cid == tempPlayer.cid }
             if (oldTempPlayer != null) {
                 val index = Server.storage.newPlayers.indexOf(oldTempPlayer)

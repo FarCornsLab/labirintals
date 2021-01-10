@@ -11,7 +11,7 @@ data class ServerSettings(
     @SerializedName("step_time")
     val stepTime: Long? = null  //секунды
 ) {
-    fun timeToString() = timeStart.toString()//timeStart?.format(DateTimeFormatter.ISO_DATE_TIME)
+    //fun timeToString() = timeStart.toString()//timeStart?.format(DateTimeFormatter.ISO_DATE_TIME)
 
 
     override fun toString(): String {

@@ -13,13 +13,11 @@ import pygame
 
 class WaitStartGameMenu(Scene):
     def __init__(self):
-        super().__init__(Core.resource_path(os.path.join('images','MainMenu_backgraund.png')))
+        super().__init__(pygame.image.load(Core.resource_path(os.path.join('images','MainMenu_backgraund.png'))).convert())
         self.max_players = 4
         self.game_params = Core.core.net_manager.game_params
-        #self.game_params = {}
-        #self.game_params["start_time"] = 0
-        #self.player_list = [{"name":"player1"},{"name":"player2"}]
-        self.update_game_state_event = pygame.USEREVENT + 1
+        self.start_time = 0
+        self.update_game_state_event = pygame.event.custom_type()
         self.custom_event_handlers[self.update_game_state_event].append(self.update_game_state)
         self.player_list = self.game_params["players"]
         self._create_menu()
@@ -48,9 +46,9 @@ class WaitStartGameMenu(Scene):
                         manager=self.ui_manager,
                         container=self.panel,
                         )
-        self.update_game_state()
+        self.update_game_state(None)
 
-    def update_game_state(self):
+    def update_game_state(self,event):
         Core.core.net_manager.update_game_params()
         self.game_params = Core.core.net_manager.game_params
         self.player_list = self.game_params["players"]
@@ -60,10 +58,17 @@ class WaitStartGameMenu(Scene):
                 sel_item_list.append("Finding players" + ("."*random.randint(0,4)))
         self.player_list_ui.set_item_list(sel_item_list)
 
-        if self.game_params["start_time"] == "0":
+        if self.game_params["start_time"] == 0:
+            self.start_time = 100
             self.start_timer_label.set_text("Wait players" + ("."*random.randint(0,4)))
         else:
-            self.start_timer_label.set_text("Game starts in " + str(int(int(self.game_params["start_time"])/1000 -time.time())) + " sec" )
+            self.start_time = int(int(self.game_params["start_time"])/1000 -time.time())
+            self.start_timer_label.set_text("Game starts in " + str(max(self.start_time,0)) + " sec" )
+            if self.start_time < 0:
+                Core.core.net_manager.send_cmd("get_position")
+                maze_position = Core.core.net_manager.recv_answer()
+                if maze_position["params"]["step_id"] > 0:
+                    Core.core.load_scene("GameScene")
 
 
     def btn_disconect_pressed(self, event):
