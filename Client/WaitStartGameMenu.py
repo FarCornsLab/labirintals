@@ -64,8 +64,11 @@ class WaitStartGameMenu(Scene):
         else:
             self.start_time = int(int(self.game_params["start_time"])/1000 -time.time())
             self.start_timer_label.set_text("Game starts in " + str(self.start_time) + " sec" )
-            if self.start_time == 0:
-                Core.core.load_scene("GameScene")
+            if self.start_time < 0:
+                Core.core.net_manager.send_cmd("get_position")
+                maze_position = Core.core.net_manager.recv_answer()
+                if maze_position["params"]["step_id"] > 0:
+                    Core.core.load_scene("GameScene")
 
 
     def btn_disconect_pressed(self, event):
