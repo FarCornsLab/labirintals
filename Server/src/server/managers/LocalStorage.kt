@@ -14,10 +14,6 @@ import kotlin.concurrent.schedule
 import kotlin.properties.Delegates
 
 class LocalStorage {
-    companion object {
-        val WAITING_START_SECONDS = 5L
-        val WAITING_STEP_SECONDS = 30L
-    }
 
     private val playersSaving = "players.json"
     private val serverParamsSaving = "server.json"
@@ -30,9 +26,9 @@ class LocalStorage {
     val winners = ArrayList<ClientModel>()
 
     private fun startTimer() {
-        serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)
-        stepTimeTo = serverParams.timeStart!! + TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)
-        Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_START_SECONDS)) {
+        serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(Server.config.waitingTime)
+        stepTimeTo = serverParams.timeStart!! + TimeUnit.SECONDS.toMillis(Server.config.stepTime)
+        Timer().schedule(TimeUnit.SECONDS.toMillis(Server.config.waitingTime)) {
             gameIsStarted = true
             globalStep = 1
             startGame()
@@ -41,9 +37,9 @@ class LocalStorage {
 
     private fun startGame() {
         if (gameIsStarted) {
-            Timer().schedule(TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)) {
+            Timer().schedule(TimeUnit.SECONDS.toMillis(Server.config.stepTime)) {
                 nextStep()
-                stepTimeTo = getTimeMillis() + TimeUnit.SECONDS.toMillis(WAITING_STEP_SECONDS)
+                stepTimeTo = getTimeMillis() + TimeUnit.SECONDS.toMillis(Server.config.stepTime)
             }
         }
     }
@@ -78,7 +74,7 @@ class LocalStorage {
     val labirint = Labirint.read("labirint.json")
 
     val serverParams: ServerSettings by lazy {
-        ServerSettings(timeStart = 0, stepTime = WAITING_STEP_SECONDS)
+        ServerSettings(timeStart = 0, stepTime = Server.config.waitingTime)
         //readServerParams()
     }
 
