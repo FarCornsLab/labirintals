@@ -13,8 +13,19 @@ Bot::Bot(const std::string& config_path) {
         return;
     }
 
+    static const std::map<std::string, std::shared_ptr<ExecutorAlgorithm> (*)()> get_algo = {
+            {"LucaTremo", [](){ return std::static_pointer_cast<ExecutorAlgorithm>(std::make_shared<LucaTremoAlgorithm>()); }},
+            {"RandomStep", [](){ return std::static_pointer_cast<ExecutorAlgorithm>(std::make_shared<LucaTremoAlgorithm>()); }}
+    };
+
+    auto algorithm = get_algo.find(game_config.algorithm_name);
+    if (algorithm == get_algo.end()) {
+        setError(Bot::Error::init, "Wrong algorithm name.");
+        return;
+    }
+
     std::shared_ptr<ManagerExecutor> manager = std::make_shared<ServerManager>(server_config,
-                                                                               std::make_shared<LucaTremoAlgorithm>(),
+                                                                               algorithm->second(),
                                                                                game_config.bot_name);
     if (game_config.is_log) {
         if (game_config.steps_log_file.has_value()) {
@@ -76,6 +87,7 @@ std::pair<ServerManager::ServerConfig, Bot::GameConfig> Bot::getConfig(const std
         file >> json_data;
 
         if (json_data.is_object()) {
+            game_config.algorithm_name = json_data.at("algorithm_name").get<std::string>();
             game_config.bot_name = json_data.at("bot_name").get<std::string>();
             game_config.is_log = json_data.at("is_log").get<bool>();
             auto steps_log_it = json_data.find("steps_log_file");

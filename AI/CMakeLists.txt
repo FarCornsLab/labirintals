@@ -32,6 +32,7 @@ endif()
 set(HEADERS
         Algorithms/ExecutorAlgorithm.h
         Algorithms/LucaTremoAlgorithm.h
+        Algorithms/RandomStepAlgorithm.h
         Client/Client.h
         Client/Commands.h
         Fields/Field.h
@@ -51,6 +52,7 @@ set(HEADERS
 
 set(DEFINITIONS
         Algorithms/LucaTremoAlgorithm.cpp
+        Algorithms/RandomStepAlgorithm.cpp
         Client/Client.cpp
         Fields/ServerField.cpp
         Manager/Executor/ServerManager.cpp

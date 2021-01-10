@@ -41,6 +41,7 @@ private:
         std::string bot_name;
         bool is_log = false;
         std::optional<std::string> steps_log_file = std::nullopt;
+        std::string algorithm_name = "LucaTremo";
     };
 
     void setError(Error error, const std::string& message);
