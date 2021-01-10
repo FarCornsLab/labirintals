@@ -63,7 +63,7 @@ class WaitStartGameMenu(Scene):
             self.start_timer_label.set_text("Wait players" + ("."*random.randint(0,4)))
         else:
             self.start_time = int(int(self.game_params["start_time"])/1000 -time.time())
-            self.start_timer_label.set_text("Game starts in " + str(self.start_time) + " sec" )
+            self.start_timer_label.set_text("Game starts in " + str(max(self.start_time,0)) + " sec" )
             if self.start_time < 0:
                 Core.core.net_manager.send_cmd("get_position")
                 maze_position = Core.core.net_manager.recv_answer()

@@ -24,7 +24,7 @@ class AimObject(GameObject):
             else:
                 self.color = (255,255,255)
         
-        delta_size = self.animation_speed_cur*time_delta
+        delta_size = max(min(self.animation_speed_cur*time_delta,30),-30)
         self.size = (self.size[0] + delta_size,self.size[1] + delta_size)
         self.position = (self.position[0] - (delta_size/2),self.position[1] - (delta_size/2))
         if self.size[0] >= 100: 
