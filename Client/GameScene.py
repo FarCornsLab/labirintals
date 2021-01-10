@@ -41,8 +41,10 @@ class GameScene(Scene):
     def send_step(self,direction):
         self.next_step  = direction
         self.player.rot = {"up":0,"down":180,"left":270,"right":90}[self.next_step]
-        Core.core.net_manager.send_cmd("make_step",{"step_id":self.cur_step_id+1,"step_type":self.next_step})
+        Core.core.net_manager.send_cmd("make_step",{"step_id":self.cur_step_id,"step_type":self.next_step})
         self.cur_step_answer = Core.core.net_manager.recv_answer()
+        if "error" in self.cur_step_answer:
+            self.make_step()
         #self.next_step_time = self.cur_step_answer["params"]["next_step_time"]
 
     def make_step(self):
