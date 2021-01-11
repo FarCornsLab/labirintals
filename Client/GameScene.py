@@ -33,6 +33,7 @@ class GameScene(Scene):
         self.cur_step_id = -1
         self.next_step_time = -100
         self.next_step = "Start"
+        self.game_end = False
         self.make_step()
         self.sec_timer_event = pygame.event.custom_type()
         self.custom_event_handlers[self.sec_timer_event].append(self.sec_timer_event_handler)
@@ -50,17 +51,24 @@ class GameScene(Scene):
         return True
         #self.next_step_time = self.cur_step_answer["params"]["next_step_time"]
 
+    def remove_aims(self):
+        if self.aims_start_num != -1:
+            for i in range(len(self.aims)):
+                self.objects.pop(self.aims_start_num)
+        self.aims.clear()
     def make_step(self):
-        self.request_maze_position()
+        Core.core.net_manager.send_cmd("get_position")
+        self.cur_maze_position = Core.core.net_manager.recv_answer()
+        if self.cur_maze_position["params"]["step_id"] == -1:
+            self.end_game()
+            return
+        self.next_step_time = self.cur_maze_position["params"]["next_step_time"]
         if self.cur_step_id == self.cur_maze_position["params"]["step_id"]:
             return
         self.cur_step_id = self.cur_maze_position["params"]["step_id"] 
         if self.next_step == None:
             return
-        if self.aims_start_num != -1:
-            for i in range(len(self.aims)):
-                self.objects.pop(self.aims_start_num)
-        self.aims.clear()
+        self.remove_aims()
         direction_to_point = {"up":(0,-100),"down":(0,100),"left":(-100,0),"right":(100,0)}
         if self.cur_maze_block == None:
             self.cur_maze_block = MazeBlock(self.cur_maze_position["params"]["field_unit"],
@@ -93,11 +101,11 @@ class GameScene(Scene):
         gl_point  = self.screen_point_to_global(event.pos)
         for aim in self.aims:
              if aim.colidepoint(gl_point):
-                 if not self.send_step(aim.name):
-                     return
-                 for aim2 in self.aims:
+                for aim2 in self.aims:
                     aim2.picked = False
-                 aim.picked = True
+                if not self.send_step(aim.name):
+                     return
+                aim.picked = True
     
     def mouse_button_up(self,event):
         self.mouse_but_state[event.button] = False
@@ -109,16 +117,6 @@ class GameScene(Scene):
     def mouse_wheel_event(self,event):
         self.zoom = self.zoom + 0.1 * event.y
 
-    def request_maze_position(self):
-        Core.core.net_manager.send_cmd("get_position")
-        self.cur_maze_position = Core.core.net_manager.recv_answer()
-        self.next_step_time = self.cur_maze_position["params"]["next_step_time"]
-    #    self.cur_maze_position = {"field_unit":[
-    #         "obstacle",
-    #         "free",
-    #         "obstacle",
-    #         "exit"
-    #     ]}
 
     def _create_menu(self):
         w,h = pygame.display.get_surface().get_size()
@@ -149,3 +147,40 @@ class GameScene(Scene):
     def btn_disconect_pressed(self, event):
         Core.core.net_manager.disconnect()
         Core.core.load_scene("FindServerMenu")
+    def draw_full_map(self,map):
+        self.objects.clear()
+        start_pos = (100,100)
+        maze_blocks_mat = []
+        maze_blocks_arr = []
+        for i in range (0,len(map["horizontal_border"][0])):
+            line = []
+            for j in range (0,len(map["horizontal_border"])-1):
+
+                line.append ( MazeBlock([map["horizontal_border"][j][i],
+                                        map["vertical_border"][i+1][j],
+                                        map["horizontal_border"][j+1][i],
+                                        map["vertical_border"][i][j]],start_pos[0],start_pos[1]))
+                start_pos = (start_pos[0],start_pos[1]+100)
+            start_pos = (start_pos[0]+100,100)
+            maze_blocks_arr.extend(line)
+            maze_blocks_mat.append(line)
+        self.objects.extend(maze_blocks_arr)
+        self.objects.append(self.player)
+
+    
+    def end_game(self):
+        self.remove_aims()
+        self.request_results()
+        pygame.time.set_timer(self.sec_timer_event,0)
+        self.draw_full_map( self.game_results["params"]["map"])
+        winers_str =''.join([pl["name"]+"<br>" for pl in self.game_results["params"]["winners"]])
+        game_end_msg_text = "Game over at " +str(self.game_results["params"]["step_id"])+" step.<br>"  + "Winnners:<br>"+ winers_str
+        self.end_msg = pygame_gui.windows.UIMessageWindow(
+                    rect=pygame.Rect(100, 100, 350, 200),
+                    html_message= game_end_msg_text,
+                    manager=self.ui_manager,
+                    window_title="Game end")
+
+    def request_results(self):
+        Core.core.net_manager.send_cmd("get_game_result")
+        self.game_results = Core.core.net_manager.recv_answer()

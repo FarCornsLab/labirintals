@@ -32,9 +32,13 @@ class NetworkManager:
         return True
 
     def disconnect(self):
-        self.send_cmd("disconnect")
-        print(self.recv_answer())
-        self.sock.close()
+        try:
+            self.send_cmd("disconnect")
+            print(self.recv_answer())
+            self.sock.shutdown(socket.SHUT_RDWR)
+            self.sock.close()
+        except:
+            pass
 
     def send_cmd(self,cmd,params = None):
         if params == None:
