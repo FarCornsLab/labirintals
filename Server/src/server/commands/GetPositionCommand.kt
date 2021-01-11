@@ -1,6 +1,7 @@
 package com.labirintals.server.commands
 
 import com.labirintals.model.BaseModel
+import com.labirintals.model.base.PlayerModel
 import com.labirintals.model.responses.PositionAnswer
 import com.labirintals.server.Server
 import com.labirintals.server.managers.SocketDataHolder
@@ -24,6 +25,9 @@ class GetPositionCommand : BaseCommand() {
 //            if (Server.storage.globalStep == -1) {
 //                player.stepId = -1
 //            }
+            if (player.stepId == PlayerModel.END_GAME) {
+                return BaseModel(commandName = TAG, commandParams = PositionAnswer(player.stepId)).toString()
+            }
             val nextStep = if (Server.storage.stepTimeTo != null) {
                 Server.storage.stepTimeTo!! //+ TimeUnit.SECONDS.toMillis(LocalStorage.WAITING_START_SECONDS)
             } else {
