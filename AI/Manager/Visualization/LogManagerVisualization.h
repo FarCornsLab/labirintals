@@ -19,6 +19,9 @@ protected:
     void beforeStep() override;
     void afterStep(bool step_result) override;
 
+    void beforeDisconnect() override;
+    void afterDisconnect(bool result) override;
+
 private:
     std::ostream& out_;
 };

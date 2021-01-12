@@ -33,6 +33,14 @@ public:
     /** If game over return list of winners, else nullopt */
     std::optional<std::vector<std::string>> getWinners() final { return executor_->getWinners(); }
 
+    /** Disconnected */
+    bool disconnect() {
+        beforeDisconnect();
+        bool result = executor_->disconnect();
+        afterDisconnect(result);
+        return result;
+    }
+
 protected:
     /** Method executed before connection */
     virtual void beforeConnect(const std::string& connect_params) = 0;
@@ -43,6 +51,11 @@ protected:
     virtual void beforeStep() = 0;
     /** Method executed after step */
     virtual void afterStep(bool step_result) = 0;
+
+    /** Method executed before step */
+    virtual void beforeDisconnect() = 0;
+    /** Method executed after step */
+    virtual void afterDisconnect(bool result) = 0;
 
     /** Return current player position on the map */
     Position getCurrentPosition() const { return executor_->getCurrentPosition(); }

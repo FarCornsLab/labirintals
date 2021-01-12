@@ -80,6 +80,13 @@ std::optional<std::vector<std::string>> ServerManager::getWinners() {
     return answer;
 }
 
+bool ServerManager::disconnect() {
+    s_cmd::Disconnect request;
+    bool result = client_->sendRequest(&request);
+    client_->disconnect();
+    return result;
+}
+
 std::string ServerManager::getConnectionParams() const {
     return "Address: " + connection_config_.address + ". Port: " + std::to_string(connection_config_.port) + ".";
 }

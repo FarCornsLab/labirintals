@@ -18,6 +18,7 @@ public:
     virtual bool connect() = 0;
     virtual bool doStep() = 0;
     virtual bool isIWin() = 0;
+    virtual bool disconnect() = 0;
     virtual std::optional<std::vector<std::string>> getWinners() = 0;
 
 protected:
