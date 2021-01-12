@@ -22,6 +22,7 @@ class LocalStorage {
     var stepTimeTo: Long? = null
     val players = ArrayList<PlayerModel>()
     var globalStep = 0
+    var finalStep = 0
     val newPlayers = ArrayList<PlayerModel>()
     val winners = ArrayList<ClientModel>()
 
@@ -57,6 +58,7 @@ class LocalStorage {
             }
         }
         if (gameIsEnd) {
+            finalStep = globalStep
             globalStep = PlayerModel.END_GAME
             gameIsStarted = false
         } else {

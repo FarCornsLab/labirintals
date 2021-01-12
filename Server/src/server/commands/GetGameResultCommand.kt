@@ -20,7 +20,7 @@ class GetGameResultCommand : BaseCommand() {
         if (Server.storage.winners.isNotEmpty()) {
             with(Server.storage) {
                 val map = MapModel(labirint.horizontalBorders, labirint.verticalBorders, MapPlayer(socketData.player?.toClientModel(), labirint.spawn))
-                val res = GetGameResultResponse(winners, globalStep, map)
+                val res = GetGameResultResponse(winners, finalStep, map)
                 return BaseModel(commandName = TAG, commandParams = res).toString()
             }
         }

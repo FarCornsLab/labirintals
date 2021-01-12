@@ -56,7 +56,10 @@ class MakeStepCommand(args: Any?) : BaseCommand() {
             }
             return BaseModel(
                 commandName = TAG,
-                commandParams = StepAnswer(tempPlayer.stepId, tempPlayer.stepType)
+                commandParams = StepAnswer(
+                    if (tempPlayer.stepId == PlayerModel.END_GAME && Server.storage.globalStep != PlayerModel.END_GAME) Server.storage.globalStep else tempPlayer.stepId,
+                    tempPlayer.stepType
+                )
             ).toString()
         } else {
             return BaseModel(commandName = TAG, error = wrongStepTime).toString()
