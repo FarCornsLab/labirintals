@@ -16,12 +16,12 @@ std::optional<BordersInPoint> ServerField::connect() {
     while (true) {
         s_cmd::GetPosition request;
         auto answer = client_->request<s_cmd::PositionAnswer>(&request);
-        if (!answer.has_value() || answer->stepId < 0) {
+        if (!answer.has_value()) {
             return std::nullopt;
         }
 
-        if (answer->stepId > 0) {
-            return getBorders(answer->fieldUnit);
+        if (answer->stepId > 0 && answer->fieldUnit.has_value()) {
+            return getBorders(answer->fieldUnit.value());
         }
 
         Client::makeDelay();
@@ -97,11 +97,11 @@ std::optional<BordersInPoint> ServerField::makeStep(const std::string& direction
     {
         s_cmd::GetPosition request;
         auto answer = client_->request<s_cmd::PositionAnswer>(&request);
-        if (!answer.has_value() || answer->stepId <= 0) {
+        if (!answer.has_value() || answer->stepId <= 0 || !answer->fieldUnit.has_value()) {
             return std::nullopt;
         }
 
-        return getBorders(answer->fieldUnit);
+        return getBorders(answer->fieldUnit.value());
     }
 
 }

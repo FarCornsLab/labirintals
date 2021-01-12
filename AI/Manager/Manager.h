@@ -18,6 +18,9 @@ public:
 
     /** Return list of winners after end of the game*/
     virtual std::optional<std::vector<std::string>> getWinners() = 0;
+
+    /** Disconnected manager with the game. Return true if disconnection successful. */
+    virtual bool disconnect() = 0;
 };
 
 #endif //AI_MANAGER_H

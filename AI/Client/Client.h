@@ -25,6 +25,9 @@ public:
     /** Function for connection to server. Return true if successful */
     bool connect(unsigned int attempt_number = 3);
 
+    /** Disconnected client from server */
+    void disconnect();
+
     /** Send request to the server and get answer */
     template<class T>
     std::optional<T> request(s_cmd::ServerCommand* cmd) {
@@ -34,6 +37,11 @@ public:
         }
 
         return s_cmd::ServerAnswer::get<T>(answer.value());
+    }
+
+    /** Send request without getting answer */
+    bool sendRequest(s_cmd::ServerCommand* cmd) {
+        return sendRequest(cmd->toString());
     }
 
     static void makeDelay();

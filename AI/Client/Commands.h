@@ -57,21 +57,28 @@ struct ServerError : public AnsStruct {
 struct ServerCommand: protected SendStruct {
     ServerCommand(const std::string& command) : cmd(command) {}
 
+    /** Command name */
     const std::string cmd;
 
+    /** Converted to string */
     std::string toString();
 };
 
 struct ServerAnswer : protected AnsStruct {
     ServerAnswer(const std::string& command) : cmd(command) {}
 
+    /** Command name */
     const std::string cmd;
+    /** Error field */
     std::optional<ServerError> error = std::nullopt;
 
+    /** Converted from string */
     bool fromString(const std::string& s);
 
+    /** Factory */
     static std::shared_ptr<ServerAnswer> createFromString(const std::string& s);
 
+    /** Factory */
     template<class T>
     static std::optional<T> get(const std::string& s) {
         auto p = createFromString(s);
@@ -166,7 +173,7 @@ struct PositionAnswer : public ServerAnswer {
     PositionAnswer() : ServerAnswer("position") {}
 
     int stepId;
-    std::vector<std::string> fieldUnit;
+    std::optional<std::vector<std::string>> fieldUnit;
 
 protected:
     bool fromJson(nlohmann::json& json) final;
@@ -188,6 +195,13 @@ struct GameResult : public ServerAnswer {
 
 protected:
     bool fromJson(nlohmann::json& json) final;
+};
+
+struct Disconnect : public ServerCommand {
+    Disconnect() : ServerCommand("disconnect") {}
+
+protected:
+    nlohmann::json toJson() final { return {}; }
 };
 
 }

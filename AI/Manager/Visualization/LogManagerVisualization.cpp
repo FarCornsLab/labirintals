@@ -43,8 +43,26 @@ void LogManagerVisualization::beforeStep() {
 }
 
 void LogManagerVisualization::afterStep(bool step_result) {
-    if (!step_result) {
+    if (!step_result && !getWinners().has_value()) {
         out_ << "Error in step!" << std::endl;
         return;
     }
+}
+
+void LogManagerVisualization::beforeDisconnect() {
+    auto winners = getWinners();
+    if (winners.has_value()) {
+        out_ << "Game over!" << std::endl;
+        out_ << "You " << ( isIWin() ? "win" : "lost") << "." << std::endl;
+        out_ << "Winners:" << std::endl;
+        for (const auto& i: winners.value()) {
+            out_ << "  - " << i << std::endl;
+        }
+    } else {
+        out_ << "Disconnected before game end." << std::endl;
+    }
+}
+
+void LogManagerVisualization::afterDisconnect(bool result) {
+    out_ << "Disconnection: " << (result ? "success" : "failed") << "." << std::endl;
 }

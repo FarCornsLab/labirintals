@@ -62,7 +62,8 @@ Bot::States Bot::run() {
 
     state_ = Bot::States::game_over;
 
-    *out_ << "You " << (manager_->isIWin() ? "win" : "lost") << "." << std::endl;
+    manager_->disconnect();
+
     return state_;
 }
 

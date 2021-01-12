@@ -9,7 +9,6 @@
 
 namespace s_cmd {
 bool Player::fromJson(nlohmann::json &json) {
-    std::cout << json.dump() << std::endl;
     try {
         name = json.at("name").get<std::string>();
         oid = json.at("oid").get<std::string>();
@@ -57,7 +56,7 @@ bool ServerError::fromJson(nlohmann::json &json) {
     try {
         code = json.at("code").get<int>();
         // TODO:
-        message = "";// json.at("message").get<std::string>();
+        message = json.at("message").get<std::string>();
     }  catch (const std::exception& ex) {
         return false;
     }
@@ -79,7 +78,6 @@ bool ServerAnswer::fromString(const std::string& s) {
     try {
         auto read = json.at("cmd").get<std::string>();
         if (cmd != read) {
-            std::cout << cmd << " " << read << std::endl;
             return false;
         }
 
@@ -164,8 +162,14 @@ bool GameParams::fromJson(nlohmann::json &json) {
 bool StepAnswer::fromJson(nlohmann::json &json) {
     try {
         stepId = json.at("step_id").get<int>();
-        setStepType = json.at("set_step_type").get<std::string>();
         stepEndTime = json.at("step_end_time").get<uint64_t>();
+
+        auto it = json.find("set_step_type");
+        if (it != json.end()) {
+            setStepType = *it;
+        } else {
+            setStepType = "null";
+        }
     }  catch (const std::exception& ex) {
         return false;
     }
@@ -175,7 +179,10 @@ bool StepAnswer::fromJson(nlohmann::json &json) {
 bool PositionAnswer::fromJson(nlohmann::json &json) {
     try {
         stepId = json.at("step_id").get<int>();
-        fieldUnit = json.at("field_unit").get<std::vector<std::string>>();
+        auto it = json.find("field_unit");
+        if (it != json.end()) {
+            fieldUnit = *it;
+        }
     }  catch (const std::exception& ex) {
         return false;
     }

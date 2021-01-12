@@ -21,6 +21,7 @@ public:
     bool doStep() override;
     bool isIWin() override;
     std::optional<std::vector<std::string>> getWinners() override;
+    bool disconnect() override;
 
 protected:
     std::string getConnectionParams() const override;
