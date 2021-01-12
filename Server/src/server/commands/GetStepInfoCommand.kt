@@ -16,10 +16,9 @@ class GetStepInfoCommand : BaseCommand() {
         val player =
             Server.storage.newPlayers.find { it.oid == socketData.player?.oid && it.cid == socketData.player?.cid }
                 ?: socketData.player
-
         return BaseModel(
             commandName = TAG,
-            commandParams = if (player != null) StepAnswer(   if (player.stepId == PlayerModel.END_GAME && Server.storage.globalStep != PlayerModel.END_GAME) Server.storage.globalStep else player.stepId, player.stepType) else null,
+            commandParams = StepAnswer(Server.storage.globalStep, if(Server.storage.globalStep == player?.stepId) player.stepType else null),
             error = if (player == null) wrongPlayerResponse else null
         ).toString()
     }

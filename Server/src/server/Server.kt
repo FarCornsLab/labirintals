@@ -15,7 +15,7 @@ import com.labirintals.server.managers.SocketManager
 import java.io.File
 
 object Server {
-    const val VERSION = "1.1.6"
+    const val VERSION = "1.1.7"
     val gson = Gson()
     val storage = LocalStorage()
     val serverManager = ServerManager()
