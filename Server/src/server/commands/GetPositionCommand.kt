@@ -21,12 +21,15 @@ class GetPositionCommand : BaseCommand() {
         return if (player == null) {
             BaseModel(commandName = MakeStepCommand.TAG, error = wrongPlayerResponse).toString()
         } else {
-            player.stepId = Server.storage.globalStep
+            //player.stepId = Server.storage.globalStep
 //            if (Server.storage.globalStep == -1) {
 //                player.stepId = -1
 //            }
-            if (player.stepId == PlayerModel.END_GAME) {
-                return BaseModel(commandName = TAG, commandParams = PositionAnswer(player.stepId)).toString()
+            if(Server.storage.globalStep != PlayerModel.END_GAME){
+                player.stepId = Server.storage.globalStep
+            }
+            if (Server.storage.globalStep == PlayerModel.END_GAME) {
+                return BaseModel(commandName = TAG, commandParams = PositionAnswer(Server.storage.globalStep)).toString()
             }
             val nextStep = if (Server.storage.stepTimeTo != null) {
                 Server.storage.stepTimeTo!! //+ TimeUnit.SECONDS.toMillis(LocalStorage.WAITING_START_SECONDS)

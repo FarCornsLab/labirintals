@@ -13,6 +13,7 @@ import com.labirintals.server.managers.LocalStorage
 import com.labirintals.server.managers.ServerManager
 import com.labirintals.server.managers.SocketManager
 import java.io.File
+import kotlin.properties.Delegates
 
 object Server {
     const val VERSION = "1.1.7"
@@ -21,6 +22,11 @@ object Server {
     val serverManager = ServerManager()
     val serverConfig = "config.json"
     val config = readConfig()
+
+    fun reload(){
+        storage.setDefault()
+        serverManager.setDefault()
+    }
 
     private fun readConfig(): ServerConfig{
         val file = File(serverConfig)
@@ -35,7 +41,7 @@ object Server {
     }
 
     @JvmStatic
-    fun main(args: Array<String>) {
+    fun main(args: Array<String>? = null) {
 //        val port: Int
 //        if (args.isNotEmpty()) {
 //            port = args[0].toInt()
@@ -60,6 +66,7 @@ object Server {
                             line?.let {
                                 println(it)
                                 socketManager.receiveMessage(line)
+                                println(storage.players)
                                 //storage.saveAll()
                             }
                         }

@@ -5,6 +5,10 @@ import io.ktor.utils.io.*
 
 class ServerManager {
     val sockets = ArrayList<BaseSocket>()
+
+    fun setDefault(){
+        sockets.clear()
+    }
 }
 
 class BaseSocket(

@@ -17,6 +17,9 @@ class DisconnectCommand: BaseCommand() {
             Server.storage.players.remove(player)
             Server.storage.newPlayers.remove(player)
             socketData.player = null
+            if(Server.storage.players.isEmpty()){
+                Server.reload()
+            }
             Server.serverManager.sockets.remove(socketData.socket)
             socketData.socket.mSocket.close()
         }
