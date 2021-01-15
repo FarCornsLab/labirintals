@@ -20,7 +20,7 @@ std::optional<StepDirection> LucaTremoAlgorithm::chooseStep() {
 
         unsigned int attended = 0;
         if (map_->isCanMakeStep(step) &&
-            (map_->lastStep() != step) &&
+            map_->lastStep() != backStep(step) &&
             ((attended = map_->numbAttended(step)) <= 2)) {
             if (attended == 0) {
                 possible_new_steps.push_back(step);
