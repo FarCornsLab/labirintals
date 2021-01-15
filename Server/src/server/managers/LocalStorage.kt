@@ -26,6 +26,20 @@ class LocalStorage {
     val newPlayers = ArrayList<PlayerModel>()
     val winners = ArrayList<ClientModel>()
 
+    init {
+        setDefault()
+    }
+
+    fun setDefault(){
+        gameIsStarted = false
+        stepTimeTo = null
+        players.clear()
+        globalStep = 0
+        finalStep = 0
+        newPlayers.clear()
+        winners.clear()
+    }
+
     private fun startTimer() {
         serverParams.timeStart = getTimeMillis() + TimeUnit.SECONDS.toMillis(Server.config.waitingTime)
         stepTimeTo = serverParams.timeStart!! + TimeUnit.SECONDS.toMillis(Server.config.stepTime)
@@ -58,7 +72,10 @@ class LocalStorage {
             }
         }
         if (gameIsEnd) {
-            finalStep = globalStep
+            print("CHANGE FINAL STEP $globalStep")
+            if(finalStep == 0) {
+                finalStep = globalStep
+            }
             globalStep = PlayerModel.END_GAME
             gameIsStarted = false
         } else {

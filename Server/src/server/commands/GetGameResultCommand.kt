@@ -4,6 +4,7 @@ import com.labirintals.ErrorCode
 import com.labirintals.ErrorNames
 import com.labirintals.model.BaseModel
 import com.labirintals.model.base.ErrorModel
+import com.labirintals.model.base.PlayerModel
 import com.labirintals.model.responses.GetGameResultResponse
 import com.labirintals.model.responses.MapModel
 import com.labirintals.model.responses.MapPlayer
@@ -17,10 +18,11 @@ class GetGameResultCommand : BaseCommand() {
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {
-        if (Server.storage.winners.isNotEmpty()) {
+        val newWinners = Server.storage.players.filter { it.stepId == PlayerModel.END_GAME }.map { it.toClientModel() }
+        if (newWinners.isNotEmpty()) {
             with(Server.storage) {
                 val map = MapModel(labirint.horizontalBorders, labirint.verticalBorders, MapPlayer(socketData.player?.toClientModel(), labirint.spawn))
-                val res = GetGameResultResponse(winners, finalStep, map)
+                val res = GetGameResultResponse(newWinners, finalStep, map)
                 return BaseModel(commandName = TAG, commandParams = res).toString()
             }
         }
