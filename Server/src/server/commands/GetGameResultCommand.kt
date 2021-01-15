@@ -18,11 +18,18 @@ class GetGameResultCommand : BaseCommand() {
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {
-        val newWinners = Server.storage.players.filter { it.stepId == PlayerModel.END_GAME }.map { it.toClientModel() }
-        if (newWinners.isNotEmpty()) {
+        if (Server.storage.winners.isEmpty()) {
+            Server.storage.winners.addAll(Server.storage.players.filter { it.stepId == PlayerModel.END_GAME }
+                .map { it.toClientModel() })
+        }
+        if (Server.storage.winners.isNotEmpty()) {
             with(Server.storage) {
-                val map = MapModel(labirint.horizontalBorders, labirint.verticalBorders, MapPlayer(socketData.player?.toClientModel(), labirint.spawn))
-                val res = GetGameResultResponse(newWinners, finalStep, map)
+                val map = MapModel(
+                    labirint.horizontalBorders,
+                    labirint.verticalBorders,
+                    MapPlayer(socketData.player?.toClientModel(), labirint.spawn)
+                )
+                val res = GetGameResultResponse(winners, finalStep, map)
                 return BaseModel(commandName = TAG, commandParams = res).toString()
             }
         }
