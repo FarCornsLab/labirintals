@@ -148,15 +148,10 @@ JSON отправляется строкой, символ "\n" является
 #### `disconnect_answer`:
 Ответ на отключение от сервера.
 От: `server`.  
-Параметры:  
-* `success` - True если успешно 
 
 Пример ответа:
     {
-        "cmd": "disconnect_answer",
-        "params": {
-            "success": true
-        }
+        "cmd": "disconnect_answer"
     }
 
 #### `get_game_params`:
