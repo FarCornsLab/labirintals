@@ -4,5 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ConnectionModel(
     @SerializedName("name")
-    val name: String? = null
+    val name: String? = null,
+    @SerializedName("token")
+    val token: String? = null
 )

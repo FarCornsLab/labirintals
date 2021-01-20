@@ -20,9 +20,10 @@ class DisconnectCommand: BaseCommand() {
             if(Server.storage.players.isEmpty()){
                 Server.reload()
             }
-            Server.serverManager.sockets.remove(socketData.socket)
-            socketData.socket.mSocket.close()
         }
+        socketData.observerToken = null
+        Server.serverManager.sockets.remove(socketData.socket)
+        socketData.socket.mSocket.close()
         return BaseModel(commandName = TAG).toString()
     }
 }

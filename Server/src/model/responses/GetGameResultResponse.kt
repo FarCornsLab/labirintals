@@ -25,7 +25,7 @@ data class MapModel(
     @SerializedName("vertical_border")
     val verticalBorders: List<List<Entity>>? = null,
     @SerializedName("players_position")
-    val mapPlayer: MapPlayer? = null
+    val mapPlayer: List<MapPlayer>? = null
 )
 
 data class MapPlayer(

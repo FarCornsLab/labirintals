@@ -27,7 +27,7 @@ class GetGameResultCommand : BaseCommand() {
                 val map = MapModel(
                     labirint.horizontalBorders,
                     labirint.verticalBorders,
-                    MapPlayer(socketData.player?.toClientModel(), labirint.spawn)
+                    listOf(MapPlayer(socketData.player?.toClientModel(), labirint.spawn))
                 )
                 val res = GetGameResultResponse(winners, finalStep, map)
                 return BaseModel(commandName = TAG, commandParams = res).toString()

@@ -4,4 +4,5 @@ import com.labirintals.model.base.PlayerModel
 
 class SocketDataHolder(val socket: BaseSocket) {
     var player: PlayerModel? = null
+    var observerToken: String? = null
 }

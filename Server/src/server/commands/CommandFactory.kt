@@ -8,7 +8,8 @@ class CommandFactory private constructor() {
             GetPositionCommand.TAG_NAME to GetPositionCommand(),
             GetStepInfoCommand.TAG_NAME to GetStepInfoCommand(),
             GetGameResultCommand.TAG_NAME to GetGameResultCommand(),
-            DisconnectCommand.TAG_NAME to DisconnectCommand()
+            DisconnectCommand.TAG_NAME to DisconnectCommand(),
+            GetMapCommand.TAG_NAME to GetMapCommand()
         )
 
         private val commandsWithParams: (Any?) -> Map<String, BaseCommand> = { params ->

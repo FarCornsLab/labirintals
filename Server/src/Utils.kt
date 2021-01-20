@@ -25,4 +25,5 @@ object ErrorNames{
     val ErrGameAlreadyEnd = "The game is already over"
     val ErrNoUserName = "Enter user name"
     val ErrNoPlayer = "Player not found"
+    val ErrWrongToken = "Observer token is wrong"
 }

@@ -11,8 +11,10 @@ data class ServerConfig(
     @SerializedName("WAITING_TIME")
     val waitingTime: Long = 60L,
     @SerializedName("STEP_TIME")
-    val stepTime: Long = 30L
-){
+    val stepTime: Long = 30L,
+    @SerializedName("OBSERVER_TOKEN")
+    val observerToken: String? = null
+) {
     override fun toString(): String {
         return Server.gson.toJson(this)
     }

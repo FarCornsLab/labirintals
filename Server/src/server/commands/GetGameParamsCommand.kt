@@ -18,7 +18,7 @@ class GetGameParamsCommand : BaseCommand() {
     }
 
     override suspend fun doCommand(socketData: SocketDataHolder): String? {
-        val error = if (storage.players.isEmpty()) {
+        val error = if (storage.players.isEmpty() && socketData.observerToken == null) {
             ErrorModel(code = ErrorCode.ErrBadRequest, message = ErrorNames.ErrNoPlayers)
         } else {
             null
