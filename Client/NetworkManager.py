@@ -8,22 +8,28 @@ class NetworkManager:
         self.buf_size = 4096
         self.player_name = player_name
         self.oid = 0
+        self.client_type = "gamer"
         #self.cid = 0
         self.game_params = {}
         pass
 
-    def connect(self,ip,port):
+    def connect(self,ip,port, client_type="gamer",token=""):
+        self.client_type = client_type
         self.sock = socket.socket()
         self.sock.setblocking(True)
         self.sock.connect((ip,port))
         try:
-            self.send_cmd(cmd ="connection",params ={"name":self.player_name})
+            if client_type == "observer":
+                self.send_cmd(cmd ="connection",params ={"name":self.player_name,"token":token})
+            else:
+                self.send_cmd(cmd ="connection",params ={"name":self.player_name})
             ans  = self.recv_answer()
             if("error" in ans):
                 err = ConnectionError(ans["error"]["message"])
                 err.strerror = ans["error"]["message"]
                 raise err
-            self.oid = ans["params"]["player"]["oid"]
+            if client_type != "observer":
+                self.oid = ans["params"]["player"]["oid"]
             #self.cid = ans["params"]["cid"]
             self.update_game_params()
         except Exception as err:

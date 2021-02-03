@@ -42,9 +42,9 @@ class GameObject:
         self.draw_texture.blit(self.texture, (0,0))
         self.rotate_texture()
         self.colorize_texture()
-        screen_pos, screen_size = self.global_to_screen(zoom,camera_offset) 
-        self.draw_texture = pygame.transform.scale(self.draw_texture,(int(screen_size[0]),int(screen_size[1])))
-        surface.blit( self.draw_texture,pygame.Rect(screen_pos,screen_size))
+        self.screen_pos,  self.screen_size = self.global_to_screen(zoom,camera_offset) 
+        self.draw_texture = pygame.transform.scale(self.draw_texture,(int(self.screen_size[0]),int(self.screen_size[1])))
+        surface.blit( self.draw_texture,pygame.Rect(self.screen_pos,self.screen_size))
 
     def move(self, dx, dy):
         self.position = (self.position[0]+dx,self.position[1]+dy)

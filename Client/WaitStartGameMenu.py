@@ -65,9 +65,12 @@ class WaitStartGameMenu(Scene):
             self.start_time = int(int(self.game_params["start_time"])/1000 -time.time())
             self.start_timer_label.set_text("Game starts in " + str(max(self.start_time,0)) + " sec" )
             if self.start_time < 0:
-                Core.core.net_manager.send_cmd("get_position")
-                maze_position = Core.core.net_manager.recv_answer()
-                if maze_position["params"]["step_id"] > 0:
+                if not Core.core.net_manager.client_type == "observer":
+                    Core.core.net_manager.send_cmd("get_position")
+                    maze_position = Core.core.net_manager.recv_answer()
+                    if maze_position["params"]["step_id"] > 0:
+                        Core.core.load_scene("GameScene")
+                else:
                     Core.core.load_scene("GameScene")
 
 

@@ -22,7 +22,7 @@ class GameScene(Scene):
         self._create_menu()
         self.cur_maze_block = None
         self.player = PlayerObject(120,120)
-        self.objects.append(self.player)
+        
         self.custom_event_handlers[pygame.MOUSEWHEEL].append(self.mouse_wheel_event)
         self.custom_event_handlers[pygame.MOUSEBUTTONDOWN].append(self.mouse_button_down)
         self.custom_event_handlers[pygame.MOUSEBUTTONUP].append(self.mouse_button_up)
@@ -34,7 +34,12 @@ class GameScene(Scene):
         self.next_step_time = -100
         self.next_step = "Start"
         self.game_end = False
-        self.make_step()
+        self.observer_mode = Core.core.net_manager.client_type == "observer"
+        if self.observer_mode:
+            self.update_observer()
+        else:
+            self.objects.append(self.player)
+            self.make_step()
         self.sec_timer_event = pygame.event.custom_type()
         self.custom_event_handlers[self.sec_timer_event].append(self.sec_timer_event_handler)
         pygame.time.set_timer(self.sec_timer_event,1000)
@@ -142,14 +147,25 @@ class GameScene(Scene):
         self.time_left = int(int(self.next_step_time)/1000 -time.time())
         self.next_step_timer_label.set_text("Time to next step "+ str(max(self.time_left,0)))
         if self.time_left < 0 :
-            self.make_step()
+            if not self.observer_mode:
+                self.make_step()
+            else:
+                self.update_observer()
+
+    def update_observer(self):
+        Core.core.net_manager.send_cmd("get_map")
+        map = Core.core.net_manager.recv_answer()
+        self.draw_full_map(map["params"]["map"],(100,100))
+
 
     def btn_disconect_pressed(self, event):
         Core.core.net_manager.disconnect()
         Core.core.load_scene("FindServerMenu")
-    def draw_full_map(self,map):
+
+    def draw_full_map(self,map,start_pos_arg):
         self.objects.clear()
-        start_pos = (100,100)
+        self.players_list = []
+        start_pos = start_pos_arg
         maze_blocks_mat = []
         maze_blocks_arr = []
         for i in range (0,len(map["horizontal_border"][0])):
@@ -165,14 +181,17 @@ class GameScene(Scene):
             maze_blocks_arr.extend(line)
             maze_blocks_mat.append(line)
         self.objects.extend(maze_blocks_arr)
-        self.objects.append(self.player)
+        for i in range(len(map["players_position"])):
+            pos = (start_pos_arg[0]+20+map["players_position"][i]["position"]["x"]*100,start_pos_arg[0]+20+map["players_position"][i]["position"]["y"]*100)
+            self.players_list.append(PlayerObject(pos[0],pos[1],map["players_position"][i]["player"]["name"]))
+        self.objects.extend(self.players_list)
 
-    
     def end_game(self):
         self.remove_aims()
         self.request_results()
         pygame.time.set_timer(self.sec_timer_event,0)
         self.draw_full_map( self.game_results["params"]["map"])
+        self.objects.append(self.player)
         winers_str =''.join([pl["name"]+"<br>" for pl in self.game_results["params"]["winners"]])
         game_end_msg_text = "Game over at " +str(self.game_results["params"]["step_id"])+" step.<br>"  + "Winnners:<br>"+ winers_str
         self.end_msg = pygame_gui.windows.UIMessageWindow(
