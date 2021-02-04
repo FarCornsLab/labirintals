@@ -34,6 +34,7 @@ std::optional<StepDirection> LucaTremoAlgorithm::chooseStep() {
     if (possible_new_steps.empty() && possible_old_steps.empty()) {
         auto last_step = map_->lastStep();
         if (last_step.has_value()) {
+            map_->setNumbAttended(10);
             return backStep(last_step.value());
         }
         std::cerr << "Wrong situation!" << std::endl;

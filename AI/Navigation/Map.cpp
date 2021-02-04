@@ -35,8 +35,12 @@ unsigned int Map::numbAttended(const StepDirection direction) const {
     return attendance_map_.numbAttended(getOffsetted(direction));
 }
 
+void Map::setNumbAttended(unsigned int n) {
+    attendance_map_.setAttended(player_position_, n);
+}
+
 void Map::makeStep(const StepDirection direction, const BordersInPoint& borders) {
-    attendance_map_.setAttended(player_position_);
+    attendance_map_.addAttended(player_position_);
     player_position_ = getOffsetted(direction);
     border_map_.set(player_position_, borders);
 

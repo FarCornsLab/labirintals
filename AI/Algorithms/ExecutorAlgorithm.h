@@ -12,11 +12,11 @@ public:
     virtual std::optional<StepDirection> chooseStep() = 0;
 
     /** Set map */
-    void setMap(std::shared_ptr<const Map> map) { map_ = map; }
+    void setMap(std::shared_ptr<Map> map) { map_ = map; }
 
 protected:
     /** Map of game */
-    std::shared_ptr<const Map> map_ = nullptr;
+    std::shared_ptr<Map> map_ = nullptr;
 };
 
 #endif //AI_EXECUTORALGORITHM_H

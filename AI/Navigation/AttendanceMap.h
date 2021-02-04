@@ -15,13 +15,17 @@ public:
     }
 
     /** Increment attends in position */
-    void setAttended(const Position& position) {
+    void addAttended(const Position& position) {
         auto it = data_.find(position);
         if (it == data_.end()) {
             data_[position] = 1;
         } else {
             (it->second)++;
         }
+    }
+
+    void setAttended(const Position& position, unsigned int value) {
+        data_[position] = value;
     }
 
 private:

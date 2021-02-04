@@ -33,6 +33,9 @@ public:
     /** Return number attend in neighborhood unit */
     unsigned int numbAttended(const StepDirection direction) const;
 
+    /** Set number attend */
+    void setNumbAttended(unsigned int n);
+
     /** Made step */
     void makeStep(const StepDirection direction, const BordersInPoint& borders);
 
