@@ -18,3 +18,6 @@ Unix:
 ```
 ./dist/labirintals_client/labirintals_client
 ```
+
+### Observer mode
+If you want watch a game like observer, you need to specify observer token, same as used in server config in "OBSERVER_TOKEN" field.  
