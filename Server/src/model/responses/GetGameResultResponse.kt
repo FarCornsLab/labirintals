@@ -12,7 +12,9 @@ data class GetGameResultResponse(
     @SerializedName("step_id")
     val stepId: Int? = null,
     @SerializedName("map")
-    val map: MapModel? = null
+    val map: MapModel? = null,
+    @SerializedName("next_step_time")
+    val stepTime: Long? = Server.storage.stepTimeTo
 ) {
     override fun toString(): String {
         return Server.gson.toJson(this)

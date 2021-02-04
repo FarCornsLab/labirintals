@@ -26,7 +26,7 @@ class GetMapCommand : BaseCommand() {
                     Server.storage.players.filter { it.stepId != PlayerModel.END_GAME }
                         .map { MapPlayer(it.toClientModel(), it.coords) }
                 )
-                return BaseModel(commandName = TAG, commandParams = GetGameResultResponse(map = map)).toString()
+                return BaseModel(commandName = TAG, commandParams = GetGameResultResponse(stepId = Server.storage.globalStep, map = map)).toString()
             }
         }
         return BaseModel(

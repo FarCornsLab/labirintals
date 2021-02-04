@@ -16,7 +16,7 @@ import java.io.File
 import kotlin.properties.Delegates
 
 object Server {
-    const val VERSION = "1.1.9"
+    const val VERSION = "1.2.0"
     val gson = Gson()
     val storage = LocalStorage()
     val serverManager = ServerManager()
